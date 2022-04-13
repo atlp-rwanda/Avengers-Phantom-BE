@@ -1,217 +1,307 @@
 const allUsers = {
-  tags: ["User"],
-  summary: "Get All Users",
-  description: "List of All Users",
+  tags: ['User'],
+  summary: 'Get All Users',
+  description: 'List of All Users',
   responses: {
     200: {
-      description: "OK",
+      description: 'OK',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             example: {
               data: {
-                name: "Jean De Dieu",
-                email: "jeanndo.phanton.avengers.io",
-                role: "admin",
-              },
-            },
-          },
-        },
-      },
+                name: 'Jean De Dieu',
+                idNumber: 199980001445,
+                district: 'Nyarugenge',
+                sector: 'Nyarugenge',
+                cele: 'Nyarugenge',
+                email: 'jeanndo.phanton.avengers.io',
+                permitId: 'R123ewew',
+                telNumber: 784860836,
+                carplate: '123erty',
+                vehicletype: 'BWM',
+                role: 'admin'
+              }
+            }
+          }
+        }
+      }
     },
     500: {
-      description: "Something Went wrong!!!",
-    },
-  },
-}
+      description: 'Something Went wrong!!!'
+    }
+  }
+};
 
 const createUser = {
-  tags: ["User"],
-  summary: "Create  a User",
-  description: "Create  a User",
+  tags: ['User'],
+  summary: 'Create  a User',
+  description: 'Create  a User',
   requestBody: {
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             name: {
-              type: "string",
-              description: "Name of the User",
-              example: "Jean De Dieu",
+              type: 'string',
+              description: 'Name of the User',
+              example: 'Jean De Dieu'
+            },
+            idNumber: {
+              type: 'integer',
+              description: 'User National ID',
+              example: 123456789
+            },
+            district: {
+              type: 'string',
+              decription: "User's District",
+              example: 'Kicukiro'
+            },
+            sector: {
+              type: 'string',
+              decription: "User's Sector",
+              example: 'Kicukiro'
+            },
+            cell: {
+              type: 'string',
+              decription: "User's Gender",
+              example: 'male'
             },
             email: {
-              type: "string",
-              description: "User email address",
-              example: "avengers.phantom.io",
+              type: 'string',
+              description: 'User email address',
+              example: 'avengers.phantom.io'
+            },
+            permitId: {
+              type: 'integer',
+              decription: 'Permit Id for Drivers',
+              example: 'qwerty12'
+            },
+            telNumber: {
+              type: 'integer',
+              decription: 'User Phone Number',
+              example: 784860836
+            },
+            carplate: {
+              type: 'string',
+              decription: 'Car plate Number for Drivers',
+              example: 'RAB123C'
+            },
+            capacity: {
+              type: 'integer',
+              decription: 'capacity of users for Drivers ',
+              example: 80
+            },
+            vehicletype: {
+              type: 'string',
+              decription: 'Type of a car for Drivers',
+              example: 'Litico'
             },
             role: {
-              type: "string",
-              description: "User must have a role to access the application",
-              example: "admin",
-            },
-          },
-        },
-      },
-    },
+              type: 'string',
+              description: 'Role Associated to User for accessing the system',
+              example: 'Admin'
+            }
+          }
+        }
+      }
+    }
   },
   responses: {
     201: {
-      description: "Created",
+      description: 'Created',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             example: {
-              status: "success",
+              status: 'success',
               data: {
-                name: "Jean De Dieu UKWITEGETSE",
-                email: "jeanndo.dev.io",
-                role: "admin",
-              },
-            },
-          },
-        },
-      },
+                uuid: '9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2',
+                name: 'Izere',
+                idNumber: 123456789,
+                gender: 'male',
+                district: 'Nyarugenge',
+                sector: 'Nyarugenge',
+                cell: 'Nyarugenge',
+                email: 'Izere@gmail.com',
+                permitId: 'bmw123',
+                telNumber: 784860836,
+                carplate: 'RAB347XZ',
+                capacity: 80,
+                vehicletype: 'Quostar',
+                password:
+                  '$2a$12$G/DwAwhFBNZPoH.h6I.6zeyPW/MEdL6Af8B3pkqDKfCiicvFKBjSO',
+                role: 'operator',
+                createdAt: '2022-04-25T11:49:11.535Z',
+                updatedAt: '2022-04-25T11:49:11.535Z'
+              }
+            }
+          }
+        }
+      }
     },
     400: {
-      description: "Invalid Data!!",
-    },
-  },
-}
+      description: 'Invalid Data!!'
+    }
+  }
+};
 
 const getUserByID = {
-  tags: ["User"],
-  summary: "Get a User By ID",
-  description: "Get a User By ID",
+  tags: ['User'],
+  summary: 'Get a User By ID',
+  description: 'Get a User By ID',
   parameters: [
     {
-      name: "uuid",
-      in: "path",
-      decription: "This is an ID of a User",
-      type: "string",
-      example: "c5697c5e-9b5c-43df-adaf-f95cf99e0685",
-    },
+      name: 'uuid',
+      in: 'path',
+      decription: 'This is an ID of a User',
+      type: 'string',
+      example: '9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2'
+    }
   ],
   responses: {
     200: {
-      description: "OK",
+      description: 'OK',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             example: {
-              status: "success",
+              status: 'success',
               data: {
-                user: {
-                  name: "Jean De Dieu UKWITEGETSE",
-                  email: "jeanndo@gmail.com",
-                  role: "admin",
-                  createdAt: "2022-04-19T12:57:15.221Z",
-                  updatedAt: "2022-04-19T12:57:15.221Z",
-                },
-              },
-            },
-          },
-        },
-      },
+                uuid: '9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2',
+                name: 'Izere',
+                idNumber: 123456789,
+                gender: 'male',
+                district: 'Nyarugenge',
+                sector: 'Nyarugenge',
+                cell: 'Nyarugenge',
+                email: 'Izere@gmail.com',
+                permitId: 'bmw123',
+                telNumber: 784860836,
+                carplate: 'RAB347XZ',
+                capacity: 80,
+                vehicletype: 'Quostar',
+                password:
+                  '$2a$12$G/DwAwhFBNZPoH.h6I.6zeyPW/MEdL6Af8B3pkqDKfCiicvFKBjSO',
+                role: 'operator',
+                createdAt: '2022-04-25T11:49:11.535Z',
+                updatedAt: '2022-04-25T11:49:11.535Z'
+              }
+            }
+          }
+        }
+      }
     },
     404: {
-      description: "No user found with That ID",
-    },
-  },
-}
+      description: 'No user found with That ID'
+    }
+  }
+};
 
 const deleteUser = {
-  tags: ["User"],
-  summary: "Delete a User By ID",
-  description: "Get a User By ID",
+  tags: ['User'],
+  summary: 'Delete a User By ID',
+  description: 'Get a User By ID',
   parameters: [
     {
-      name: "uuid",
-      in: "path",
-      decription: "This is an ID of a User",
-      type: "string",
-      example: "c5697c5e-9b5c-43df-adaf-f95cf99e0685",
-    },
+      name: 'uuid',
+      in: 'path',
+      decription: 'This is an ID of a User',
+      type: 'string',
+      example: '9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2'
+    }
   ],
   responses: {
     200: {
-      description: "OK",
+      description: 'OK',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             example: {
-              status: "success",
+              status: 'success',
               data: {
-                message: "User Delete Successully",
-              },
-            },
-          },
-        },
-      },
+                message: 'User Deleted Successully'
+              }
+            }
+          }
+        }
+      }
     },
     404: {
-      description: "No user found with That ID",
-    },
-  },
-}
+      description: 'No user with That ID'
+    }
+  }
+};
 
 const updateUser = {
-  tags: ["User"],
-  summary: "Update a User By ID",
-  description: "Get a User By ID",
+  tags: ['User'],
+  summary: 'Update a User By ID',
+  description: 'Get a User By ID',
   parameters: [
     {
-      name: "uuid",
-      in: "path",
-      decription: "This is an ID of a User",
-      type: "string",
-      example: "c5697c5e-9b5c-43df-adaf-f95cf99e0685",
-    },
+      name: 'uuid',
+      in: 'path',
+      decription: 'This is an ID of a User',
+      type: 'string',
+      example: 'f3b7f03d-641b-4ebd-9296-5c942bb971b6'
+    }
   ],
   responses: {
     200: {
-      description: "OK",
+      description: 'OK',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             example: {
-              status: "success",
+              status: 'success',
               data: {
-                status: "success",
-                message: "User Updated Successully",
-                data: {
-                  user: {
-                    name: "Jean De Dieu",
-                    email: "example@gmail.com",
-                    role: "user",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+                user: {
+                  uuid: '9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2',
+                  name: 'Izere',
+                  idNumber: 123456789,
+                  gender: 'male',
+                  district: 'Nyarugenge',
+                  sector: 'Nyarugenge',
+                  cell: 'Nyarugenge',
+                  email: 'Izere@gmail.com',
+                  permitId: 'bmw123',
+                  telNumber: 784860836,
+                  carplate: 'RAB347XZ',
+                  capacity: 80,
+                  vehicletype: 'Quostar',
+                  password:
+                    '$2a$12$G/DwAwhFBNZPoH.h6I.6zeyPW/MEdL6Af8B3pkqDKfCiicvFKBjSO',
+                  role: 'operator',
+                  createdAt: '2022-04-25T11:49:11.535Z',
+                  updatedAt: '2022-04-25T11:49:11.535Z'
+                }
+              }
+            }
+          }
+        }
+      }
     },
     404: {
-      description: "No user found with That ID",
-    },
-  },
-}
+      description: 'No user found with That ID'
+    }
+  }
+};
 const userRouteDoc = {
-  "/users": {
+  '/api/v1/users': {
     get: allUsers,
-    post: createUser,
+    post: createUser
   },
-  "/users/{uuid}": {
+  '/api/v1/users/{uuid}': {
     get: getUserByID,
     delete: deleteUser,
-    patch: updateUser,
-  },
-}
+    patch: updateUser
+  }
+};
 
-module.exports = userRouteDoc
+module.exports = userRouteDoc;

@@ -1,84 +1,99 @@
-"use strict"
+'use strict';
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       uuid: {
         type: DataTypes.UUID,
         allowNull: false,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: DataTypes.UUIDV4
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       idNumber: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       gender: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       district: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       sector: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       cell: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      permitId: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false
       },
       telNumber: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       carplate: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       capacity: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       vehicletype: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       password: {
+        type: DataTypes.STRING
+      },
+      permitId: {
         type: DataTypes.STRING,
+        allowNull: true
+      },
+      telNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      carplate: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      capacity: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      vehicletype: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      password: {
+        type: DataTypes.STRING
       },
       role: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE,
-      },
-    })
+        type: DataTypes.DATE
+      }
+    });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable("users")
-  },
-}
+    await queryInterface.dropTable('users');
+  }
+};
