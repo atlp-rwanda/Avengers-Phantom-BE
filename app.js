@@ -4,17 +4,24 @@ const cors = require("cors")
 const swaggerUI = require("swagger-ui-express")
 const swaggerDocumentation = require("./src/docs/swagger.js")
 
-const { User } = require("./models")
+const i18next = require("i18next")
+const Backend = require("i18next-fs-backend")
+const middleware = require("i18next-http-middleware")
+const userRouter = require("./src/Users/Routes/users.route")
 
 i18next
   .use(Backend)
   .use(middleware.LanguageDetector)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: "en",
     backend: {
-      loadPath: './locales/{{lng}}/translation.json'
-    }
-  });
+      loadPath: "./locales/{{lng}}/translation.json",
+    },
+  })
+
+const app = express()
+app.use(express.json())
+app.use(cors())
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -23,82 +30,12 @@ app.get("/", (req, res) => {
   })
 })
 
+app.use("/api/v1/users", userRouter)
+
 app.use(
   "/documentation",
   swaggerUI.serve,
   swaggerUI.setup(swaggerDocumentation)
 )
-
-app.post("/users", async (req, res) => {
-  const { name, email, role } = req.body
-  try {
-    const user = await User.create({ name, email, role })
-    res.status(201).json({
-      status: "success",
-      data: {
-        user,
-      },
-    })
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      message: "Something went wrong!!!",
-    })
-  }
-})
-app.get("/users", async (req, res) => {
-  try {
-    const users = await User.findAll()
-    res.status(200).json({
-      status: "success",
-      data: {
-        users,
-      },
-    })
-  } catch (error) {
-    res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
-    })
-  }
-})
-app.get("/users/:uuid", async (req, res) => {
-  const uuid = req.params.uuid
-  try {
-    const user = await User.findOne({
-      where: { uuid },
-    })
-    res.status(200).json({
-      status: "success",
-      data: {
-        user,
-      },
-    })
-  } catch (error) {
-    res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
-    })
-  }
-})
-
-app.delete("/users/:uuid", async (req, res) => {
-  const uuid = req.params.uuid
-  try {
-    const user = await User.findOne({
-      where: { uuid },
-    })
-    await suer.destroy()
-    res.status(200).json({
-      status: "success",
-      message: "User Delete Successully",
-    })
-  } catch (error) {
-    res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
-    })
-  }
-})
 
 module.exports = app
