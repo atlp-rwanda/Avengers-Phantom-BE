@@ -1,0 +1,37 @@
+{
+  "name": "avengers-phantom-be",
+  "version": "1.0.0",
+  "description": "Avengers phantom Backend Project Setup",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon server.js",
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atlp-rwanda/Avengers-Phantom-BE.git"
+  },
+  "author": "Avengers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atlp-rwanda/Avengers-Phantom-BE/issues"
+  },
+  "homepage": "https://github.com/atlp-rwanda/Avengers-Phantom-BE#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "swagger-jsdoc": "^6.2.0",
+    "swagger-ui-express": "^4.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
+    "nodemon": "^2.0.15"
+  }
+}
