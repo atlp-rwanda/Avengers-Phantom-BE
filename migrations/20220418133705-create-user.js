@@ -10,14 +10,59 @@ module.exports = {
       },
       uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         defaultValue: DataTypes.UUIDV4,
       },
-      name: {
+      driverName: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      idNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      district: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      sector: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      cell: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      permitId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      telNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      carplate: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      capacity: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      vehicletype: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      password: {
+        type: DataTypes.STRING,
       },
       role: {
         type: DataTypes.STRING,

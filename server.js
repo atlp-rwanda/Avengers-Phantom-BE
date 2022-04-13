@@ -1,11 +1,13 @@
-import app from './app.js';
-import dotenv from 'dotenv';
-const { sequelize } = require('./models');
+const app = require("./app.js")
+const dotenv = require("dotenv")
+const { sequelize } = require("./models")
 
-dotenv.config();
+dotenv.config({ path: "./config.env" })
+
+const PORT = 8000
 
 app.listen(PORT, async () => {
-  await sequelize.authenticate();
-  console.log(`Server is running on Port ${PORT}`);
-  console.log('Database Connected!!');
-});
+  await sequelize.authenticate()
+  console.log(`Server is running on Port ${PORT}`)
+  console.log("Database Connected!!")
+})
