@@ -1,8 +1,7 @@
-// @ts-nocheck
-const express = require("express")
-const cors = require("cors")
-const swaggerUI = require("swagger-ui-express")
-const swaggerDocumentation = require("./src/docs/swagger.js")
+import express from "express"
+import cors from "cors"
+import swaggerUI from "swagger-ui-express"
+import swaggerDocumentation from "./src/docs/swagger.js"
 
 const { User } = require("./models")
 
@@ -10,11 +9,15 @@ i18next
   .use(Backend)
   .use(middleware.LanguageDetector)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: "en",
     backend: {
-      loadPath: './locales/{{lng}}/translation.json'
-    }
-  });
+      loadPath: "./locales/{{lng}}/translation.json",
+    },
+  })
+
+const app = express()
+app.use(express.json())
+app.use(cors())
 
 app.get("/", (req, res) => {
   res.status(200).json({
