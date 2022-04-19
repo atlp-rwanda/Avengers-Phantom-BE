@@ -1,7 +1,8 @@
-import express from "express"
-import cors from "cors"
-import swaggerUI from "swagger-ui-express"
-import swaggerDocumentation from "./src/docs/swagger.js"
+// @ts-nocheck
+const express = require("express")
+const cors = require("cors")
+const swaggerUI = require("swagger-ui-express")
+const swaggerDocumentation = require("./src/docs/swagger.js")
 
 const { User } = require("./models")
 
