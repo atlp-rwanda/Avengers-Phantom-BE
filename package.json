@@ -21,6 +21,7 @@
   "homepage": "https://github.com/atlp-rwanda/Avengers-Phantom-BE#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "i18next": "^21.6.16",
     "i18next-fs-backend": "^1.1.4",
@@ -38,6 +39,7 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
     "mocha": "^9.2.2",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "sinon": "^13.0.2"
   }
 }
