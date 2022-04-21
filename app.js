@@ -105,4 +105,30 @@ app.delete("/users/:uuid", async (req, res) => {
   }
 })
 
+app.patch("/users/:uuid", async (req, res) => {
+  const uuid = req.params.uuid
+  const { name, email, role } = req.body
+  try {
+    const user = await User.findOne({ where: { uuid } })
+
+    user.name = name
+    user.email = email
+    user.role = role
+
+    await suer.save()
+
+    res.status(200).json({
+      status: "success",
+      message: "User Updated Successully",
+      data: {
+        user,
+      },
+    })
+  } catch (error) {
+    res.status(404).json({
+      message: "No user with that ID",
+      Error: error.stack,
+    })
+  }
+})
 module.exports = app
