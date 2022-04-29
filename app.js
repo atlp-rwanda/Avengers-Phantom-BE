@@ -22,13 +22,14 @@ i18next
   });
 
 const app = express();
+app.use(middleware.handle(i18next));
 app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
   res.status(200).json({
-    status: "success",
-    message: "Welcome to Phantom Project Powered By Avengers!!",
+    status: req.t('success status'),
+    message: req.t('welcome message'),
   });
 });
 

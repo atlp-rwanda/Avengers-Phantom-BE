@@ -17,7 +17,7 @@ const protect = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        message: "You are not logged in Please login to have access",
+        message: req.t('middleware protect message'),
       });
     }
 
@@ -36,7 +36,7 @@ const protect = async (req, res, next) => {
 
     if (!freshUser) {
       return res.status(401).json({
-        message: "The User belongs to this token does'nt exist",
+        message: req.t('middleware not fresh user'),
       });
     }
 
@@ -45,7 +45,7 @@ const protect = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(401).json({
-      message: "Something Went very wrong",
+      message: req.t('try again message'),
       err: error.message,
     });
     console.log(error);
@@ -56,7 +56,7 @@ const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
-        message: "You are not permitted to perform this action",
+        message: req.t('middleware restrict message'),
       });
     }
     next();

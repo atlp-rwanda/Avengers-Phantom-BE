@@ -42,7 +42,7 @@ const register = async (req, res) => {
 
     if (user) {
       return res.status(403).json({
-        message: "User Already Exist Please use a different account",
+        message: req.t("existing user message"),
       });
     }
     const newUser = await User.create({
@@ -75,16 +75,16 @@ const register = async (req, res) => {
     });
 
     res.status(201).json({
-      status: "success",
-      message: "Email Sent successfully 👍🏾",
+      status: req.t("success status"),
+      message: req.t("email sent"),
       data: {
         user: newUser,
       },
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "Something went wrong try Again!!",
+      status: req.t("fail status"),
+      message: req.t("try aaagain message"),
       error: error,
     });
   }
@@ -95,7 +95,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({
-        message: "Please Provide email and password",
+        message: req.t("provide email & password"),
       });
     }
 
@@ -105,14 +105,14 @@ const login = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
 
       return res.status(401).json({
-        message: "Invalid Email or Password",
+        message: req.t("invalid credentials"),
       });
     }
 
     const token = signToken(user.uuid);
     res.status(200).json({
-      status: "success",
-      message: `${user.name} successfully Logged in!!`,
+      status: req.t("success status"),
+      message: `${user.name} ${req.t("login success")}`,
       token,
       data: {
         user,
@@ -120,8 +120,8 @@ const login = async (req, res) => {
     });
   } catch (error) {
     res.status(401).json({
-      status: "fail",
-      message: "Unauthorized User Please try again",
+      status: req.t("fail status"),
+      message: req.t("login error"),
       err: error.stack,
       errorMessage: error,
     });

@@ -5,7 +5,7 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
     res.status(201).json({
-      status: "success",
+      status: req.t('success status'),
       result: users.length,
       data: {
         users: users,
@@ -13,8 +13,8 @@ const getAllUsers = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "Something went wrong!!",
+      status: req.t('fail status'),
+      message: req.t('try again message'),
       err: error.stack,
     });
   }
@@ -27,7 +27,7 @@ const getUser = async (req, res) => {
       where: { uuid },
     });
     res.status(200).json({
-      status: "success",
+      status: req.t('success message'),
       data: {
         user,
       },
@@ -50,15 +50,15 @@ const updateRole = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      status: "success",
-      message: "User's role Updated Successfully",
+      status: req.t('success status'),
+      message: req.t('user role updated message'),
       data: {
         user,
       },
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
+      message: req.t('user wrong ID'),
       Error: error.stack,
     });
   }
@@ -98,15 +98,15 @@ const updateUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      status: "success",
-      message: "User Updated Successully",
+      status: req.t('success status'),
+      message: req.t('user update message'),
       data: {
         user,
       },
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
+      message: req.t('user wrong ID'),
       Error: error.stack,
     });
   }
@@ -122,12 +122,12 @@ const deleteUser = async (req, res) => {
     await user.destroy();
 
     res.status(200).json({
-      status: "success",
-      message: "User Deleted Successully",
+      status: req.t('success status'),
+      message: req.t('user deleted message'),
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
+      message: req.t('user wrong ID'),
       Error: error.stack,
     });
   }

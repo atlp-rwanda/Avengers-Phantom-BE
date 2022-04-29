@@ -6,8 +6,8 @@ const createBus = async(req,res)=>{
         
         const newBus = await Bus.create({ company,type,plateNumber,manufacturer,capacity,YOM})
         res.status(201).json({
-            status:"success",
-            message:"Created Sucessfully!!",
+            status:req.t('success status'),
+            message:req.t("successful creation"),
             data:{
                 buses:newBus
             }
@@ -15,8 +15,8 @@ const createBus = async(req,res)=>{
     
     } catch (error) {
         res.status(400).json({
-            status:"fail",
-            message:"Invalid Inputs Please Try Again",
+            status:req.t("fail status"),
+            message:req.t('try again message'),
             err:error.stack
         })
     }
@@ -26,15 +26,15 @@ const getAllBuses = async(req,res)=>{
     try {
         const buses = await Bus.findAll();
         res.status(200).json({
-            status:"success",
+            status:req.t('success status'),
             data:{
                 buses
             }
         })
     } catch (error) {
         res.status(500).json({
-            status:"fail",
-            message:"Something Went Very Wrong 👎🏿",
+            status:req.t('fail status'),
+            message:req.t('try again message'),
             err:error.stack
         })
     }
@@ -46,15 +46,15 @@ const getBus = async(req,res)=>{
 
         const bus = await Bus.findOne({where:{uuid}})
         res.status(200).json({
-            status:"success",
+            status:req.t('success status'),
             data:{
                 buses:bus
             }
         })
     } catch (error) {
         res.status(404).json({
-            status:"fail",
-            message:"No bus found with that ID!",
+            status:req.t('fail status'),
+            message:req.t('bus wrong ID'),
             err:error.stack
         })
         
@@ -81,13 +81,13 @@ const updateBus = async(req,res)=>{
 
         await bus.save()
         res.status(200).json({
-            status:"successs",
-            message:"Bus updated Successfully"
+            status:req.t('success status'),
+            message:req.t('bus update success')
         })
     } catch (error) {
         res.status(404).json({
-            status:"fail",
-            message:"No Bus found with that ID!",
+            status:req.t('fail staus'),
+            message:req.t('bus wrong ID'),
             err:error.stack
         });
     }
@@ -101,12 +101,12 @@ const deleteBus = async(req,res)=>{
         })
         await bus.destroy();
         res.status(200).json({
-            message:"Bus Delete Successfully!!"
+            message:req.t('bus delete success')
         })
     } catch (error) {
         res.status(404).json({
-            status:"fail",
-            message:"No Bus found with that ID!!",
+            status:req.t('fail status'),
+            message:req.t('bus wrong ID'),
             err:error.stack
         })
     }

@@ -13,16 +13,16 @@ const createRole = async (req, res) => {
 
     console.log(newRole);
     res.status(201).json({
-      status: 'success',
-      message: 'Role created successfully 👍🏾',
+      status: req.t('success status'),
+      message: req.t('role created message'),
       data: {
         role: newRole
       }
     });
   } catch (error) {
     res.status(500).json({
-      status: 'fail',
-      message: 'Something went wrong try Again!!',
+      status: req.t('fail status'),
+      message: req.t('try again message'),
       err: error
     });
   }
@@ -32,7 +32,7 @@ const getAllRoles = async (req, res) => {
   try {
     const roles = await Roles.findAll();
     res.status(201).json({
-      status: 'success',
+      status: req.t('success status'),
       result: roles.length,
       data: {
         roles: roles
@@ -40,8 +40,8 @@ const getAllRoles = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      status: 'fail',
-      message: 'Something went wrong!!',
+      status: req.t('fail status'),
+      message: req.t('try again message'),
       err: error.stack
     });
   }
@@ -54,14 +54,14 @@ const getRole = async (req, res) => {
       where: { uuid }
     });
     res.status(200).json({
-      status: 'success',
+      status: req.t('success status'),
       data: {
         role
       }
     });
   } catch (error) {
     res.status(404).json({
-      message: 'No role with that ID',
+      message: req.t('role wrong id'),
       Error: error.stack
     });
   }
@@ -78,15 +78,15 @@ const updateRole = async (req, res) => {
     await role.save();
 
     res.status(200).json({
-      status: 'success',
-      message: 'Role Updated Successfully',
+      status: req.t('success status'),
+      message: req.t('role update message'),
       data: {
         role
       }
     });
   } catch (error) {
     res.status(404).json({
-      message: 'No role with that ID',
+      message: req.t('role wrong id'),
       Error: error.stack
     });
   }
@@ -102,12 +102,12 @@ const deleteRole = async (req, res) => {
     await role.destroy();
 
     res.status(200).json({
-      status: 'success',
-      message: 'Role Deleted Successfully'
+      status: req.t('success status'),
+      message: req.t('role deleted message')
     });
   } catch (error) {
     res.status(404).json({
-      message: 'No role with that ID',
+      message: req.t('role wrong id'),
       Error: error.stack
     });
   }
