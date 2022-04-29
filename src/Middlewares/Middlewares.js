@@ -1,7 +1,7 @@
-const { User, Roles } = require("./../../models");
+const { User, Roles } = require('./../../models');
 
-const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
+const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 const protect = async (req, res, next) => {
   try {
@@ -9,15 +9,15 @@ const protect = async (req, res, next) => {
 
     // Get token and Check if is there.
 
-    if (req.headers.authorization.startsWith("Bearer")) {
-      token = req.headers.authorization.split(" ")[1];
+    if (req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
     }
 
     // console.log(token)
 
     if (!token) {
       return res.status(401).json({
-        message: "You are not logged in Please login to have access",
+        message: 'You are not logged in Please login to have access'
       });
     }
 
@@ -31,12 +31,12 @@ const protect = async (req, res, next) => {
     console.log(uuid);
 
     const freshUser = await User.findOne({
-      where: { uuid: decoded.uuid },
+      where: { uuid: decoded.uuid }
     });
 
     if (!freshUser) {
       return res.status(401).json({
-        message: "The User belongs to this token does'nt exist",
+        message: "The User belongs to this token does'nt exist"
       });
     }
 
@@ -45,8 +45,8 @@ const protect = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(401).json({
-      message: "Something Went very wrong",
-      err: error.message,
+      message: 'Something Went very wrong',
+      err: error.message
     });
     console.log(error);
   }
@@ -56,7 +56,7 @@ const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
-        message: "You are not permitted to perform this action",
+        message: 'You are not permitted to perform this action'
       });
     }
     next();

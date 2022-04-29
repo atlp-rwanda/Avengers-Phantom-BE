@@ -1,21 +1,21 @@
 // @ts-nocheck
-const { User } = require("./../../../models");
+const { User } = require('./../../../models');
 
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
     res.status(201).json({
-      status: "success",
+      status: 'success',
       result: users.length,
       data: {
-        users: users,
-      },
+        users: users
+      }
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "Something went wrong!!",
-      err: error.stack,
+      status: 'fail',
+      message: 'Something went wrong!!',
+      err: error.stack
     });
   }
 };
@@ -24,42 +24,18 @@ const getUser = async (req, res) => {
   const uuid = req.params.uuid;
   try {
     const user = await User.findOne({
-      where: { uuid },
+      where: { uuid }
     });
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: {
-        user,
-      },
+        user
+      }
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
-    });
-  }
-};
-
-const updateRole = async (req, res) => {
-  const uuid = req.params.uuid;
-  const { role } = req.body;
-  try {
-    const user = await User.findOne({ where: { uuid } });
-
-    user.role = role;
-    await user.save();
-
-    res.status(200).json({
-      status: "success",
-      message: "User's role Updated Successfully",
-      data: {
-        user,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
+      message: 'No user with that ID',
+      Error: error.stack
     });
   }
 };
@@ -78,7 +54,7 @@ const updateUser = async (req, res) => {
     telNumber,
     carplate,
     capacity,
-    vehicletype,
+    vehicletype
   } = req.body;
   try {
     const user = await User.findOne({ where: { uuid } });
@@ -98,16 +74,16 @@ const updateUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      status: "success",
-      message: "User Updated Successully",
+      status: 'success',
+      message: 'User Updated Successully',
       data: {
-        user,
-      },
+        user
+      }
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
+      message: 'No user with that ID',
+      Error: error.stack
     });
   }
 };
@@ -116,21 +92,21 @@ const deleteUser = async (req, res) => {
   const uuid = req.params.uuid;
   try {
     const user = await User.findOne({
-      where: { uuid },
+      where: { uuid }
     });
 
     await user.destroy();
 
     res.status(200).json({
-      status: "success",
-      message: "User Deleted Successully",
+      status: 'success',
+      message: 'User Deleted Successully'
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
+      message: 'No user with that ID',
+      Error: error.stack
     });
   }
 };
 
-module.exports = { getAllUsers, getUser, updateUser, updateRole, deleteUser };
+module.exports = { getAllUsers, getUser, updateUser, deleteUser };
