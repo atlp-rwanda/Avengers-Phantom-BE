@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const PassGenerator = require("generate-password");
 const sendEmail = require("../utils/Email");
 const bcrypt = require("bcryptjs");
+const { promisify } = require("util");
 
 const signToken = (uuid) => {
   return jwt.sign({ uuid }, process.env.JWT_SECRETE, {
@@ -135,11 +136,10 @@ const login = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   try {
-
-    const {email} = req.body
+    const { email } = req.body;
     //1) Get user based on posted email
-    const user = await User.findOne({ where:{ email}})
-    
+    const user = await User.findOne({ where: { email } });
+
     if (!user) {
       return res.status(404).json({
         message: "There is no user with that email address",
@@ -179,4 +179,74 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgotPassword };
+const resetPassword = async (req, res) => {
+  try {
+    /**
+     * Get New Password
+     * Get reset Token
+     */
+
+    const { password } = req.body;
+    const Token = req.params.token;
+
+    if (!password || !Token) {
+      return res.status(401).json({
+        message: "Please check whether Password or Token are provided",
+      });
+    }
+
+    /**
+     * Verify Token
+     */
+
+    const decoded = await promisify(jwt.verify)(
+      Token,
+      process.env.RESET_PASSWORD_SECRETE
+    );
+
+    if (!decoded) {
+      return res.status(401).json({
+        message: "Your Token is Invalid or Expired",
+      });
+    }
+
+    /**
+     * Check if user belongs to token exist in our database
+     */
+
+    const user = await User.findOne({
+      where: { passwordResetToken: Token },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        message: "The User belongs to this token does'nt exist",
+      });
+    }
+
+    /**
+     * update User Password
+     */
+    const hashedPass = await bcrypt.hash(password, 12);
+
+    user.password = hashedPass;
+    user.passwordResetToken = "";
+    await user.save();
+
+    /**
+     * Sending Result message to user.
+     */
+
+    res.status(200).json({
+      status: "success",
+      message: "Your password has been updated successfully 👍🏾",
+    });
+  } catch (error) {
+    res.status(401).json({
+      message: "Something Went very wrong",
+      err: error,
+    });
+  }
+};
+
+module.exports = { register, login, forgotPassword, resetPassword };
