@@ -1,5 +1,5 @@
 const express = require("express");
-const { register, login} = require("../../Authentication/AuthController.js");
+const { register,login, forgotPassword} = require("../../Authentication/AuthController.js");
 const {
   getAllUsers,
   getUser,
@@ -14,6 +14,7 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
+router.put("/forgotpassword",forgotPassword);
 
 router.route("/").get(protect, getAllUsers);
 router
