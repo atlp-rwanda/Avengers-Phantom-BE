@@ -15,46 +15,31 @@ module.exports = {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
-      },
-      idNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       gender: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+      },
+      idNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       district: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       sector: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       cell: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      telNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
-      carplate: {
+      email: {
         type: DataTypes.STRING,
-        allowNull: true
-      },
-      capacity: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-      },
-      vehicletype: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      password: {
-        type: DataTypes.STRING
+        allowNull: false,
       },
       permitId: {
         type: DataTypes.STRING,
@@ -62,7 +47,7 @@ module.exports = {
       },
       telNumber: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       carplate: {
         type: DataTypes.STRING,
@@ -77,11 +62,16 @@ module.exports = {
         allowNull: true
       },
       password: {
-        type: DataTypes.STRING
-      },
-      role: {
         type: DataTypes.STRING,
         allowNull: true
+         },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      passwordResetToken:{
+      type: DataTypes.STRING,
+      defaultValue:""
       },
       createdAt: {
         allowNull: false,
