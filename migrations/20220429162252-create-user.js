@@ -69,6 +69,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      isAssigned:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
+      },
       passwordResetToken:{
       type: DataTypes.STRING,
       defaultValue:""

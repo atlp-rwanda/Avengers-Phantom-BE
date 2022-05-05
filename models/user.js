@@ -4,19 +4,21 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+
+    static associate({Bus}) {
+      this.hasOne(Bus,{foreignKey:"userId",as:"bus"})
     }
+
     toJSON() {
       return {
         ...this.get(),
         id: undefined,
-        passwordResetToken:undefined
+        passwordResetToken:undefined,
+        updatedAt:undefined,
+        createdAt:undefined,
+        isAssigned:undefined,
+        password:undefined,
+        bus: undefined,
       };
     }
   }
@@ -120,6 +122,10 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: { msg: 'Driver or Operator must not be empty' }
       }
     },
+    isAssigned:{
+      type:DataTypes.BOOLEAN,
+      defaultValue:false
+    },
     passwordResetToken:{
       type:DataTypes.STRING,
       defaultValue:""
@@ -131,3 +137,5 @@ module.exports = (sequelize, DataTypes) => {
   });
   return User;
 };
+
+

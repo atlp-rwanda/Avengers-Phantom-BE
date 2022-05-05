@@ -3,13 +3,16 @@ const { User } = require("./../../../models");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    
+    const users = await User.findAndCountAll();
+
     res.status(201).json({
       status: "success",
       result: users.length,
       data: {
         users: users,
       },
+       
     });
   } catch (error) {
     res.status(500).json({
