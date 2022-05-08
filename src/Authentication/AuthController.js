@@ -95,6 +95,7 @@ const register = async (req, res) => {
       message: "Something went wrong try Again!!",
       error: error,
     });
+    console.error(error)
   }
 };
 
