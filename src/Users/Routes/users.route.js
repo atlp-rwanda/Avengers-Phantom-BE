@@ -17,10 +17,10 @@ router.post("/login", login);
 router.put("/forgotpassword",forgotPassword);
 router.put("/resetpassword/:token",resetPassword);
 
-router.route("/").get(protect, getAllUsers);
+router.route("/").get(protect,restrictTo("administrator"), getAllUsers);
 router
   .route("/:uuid")
-  .get(protect, getUser)
+  .get(protect,restrictTo("administrator"), getUser)
   .patch(protect, restrictTo("administrator"), updateUser)
   .patch(protect, restrictTo("administrator"), updateRole)
   .delete(protect, restrictTo("administrator"), deleteUser);

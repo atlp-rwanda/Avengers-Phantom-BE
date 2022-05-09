@@ -10,6 +10,7 @@ const middleware = require("i18next-http-middleware");
 const userRouter = require("./src/Users/Routes/users.route");
 const roleRouter = require("./src/Roles/Routes/roles.route");
 const busRouter = require("./src/Buses/routes/bus.route");
+const AssignAndUnAssignRouter = require("./src/Assignment/routes/assingDrivertoBus.route");
 
 i18next
   .use(Backend)
@@ -35,8 +36,8 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/buses", busRouter);
-
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/assignment", AssignAndUnAssignRouter);
 
 app.use(
   "/documentation",
