@@ -52,6 +52,7 @@ const register = async (req, res) => {
         message: "User Already Exist Please use a different account",
       });
     }
+
     const newUser = await User.create({
       name,
       idNumber,
@@ -107,7 +108,7 @@ const login = async (req, res) => {
     }
 
     const user = await User.findOne({ where: { email } });
-    console.log(password, user.password);
+    console.log((await bcrypt.compare(password, user.password)));
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
