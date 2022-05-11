@@ -1,5 +1,5 @@
 const express = require("express");
-const {User} =  require("./../../../models")
+const { User } = require("./../../../models");
 
 const {
   AssignDriverToBus,
@@ -8,14 +8,22 @@ const {
   AllAssignedBusses,
 } = require("./../controllers/AssignDrivertoBus.controller");
 
-const { protect, restrictTo,paginatedResult} = require("./../../Middlewares/Middlewares");
-
+const {
+  protect,
+  restrictTo,
+  paginatedResult,
+} = require("./../../Middlewares/Middlewares");
 
 const router = express.Router();
 
 router
   .route("/drivers")
-  .get(protect, restrictTo("operator"),paginatedResult(User),AllAssignedDrivers);
+  .get(
+    protect,
+    restrictTo("operator"),
+    paginatedResult(User),
+    AllAssignedDrivers
+  );
 router.route("/buses").get(protect, restrictTo("operator"), AllAssignedBusses);
 
 router

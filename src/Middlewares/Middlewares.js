@@ -65,17 +65,20 @@ const restrictTo = (...roles) => {
 };
 
 const paginatedResult = (model) => {
+
   return async (req, res, next) => {
-    const count = await model.findAndCountAll({include:'bus'})
+
+    const count = await model.findAndCountAll({ include: "bus" });
+
     const results = {};
-    if(req.query.page&&req.query.limit){
+
+    if (req.query.page && req.query.limit) {
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
-
+     
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
-  
-  
+
       if (endIndex < count.count) {
         results.next = {
           page: page + 1,
@@ -88,9 +91,9 @@ const paginatedResult = (model) => {
           limit: limit,
         };
       }
-  
-     
-      results.drivers = await model.findAndCountAll({inlude:'bus',
+
+      results.drivers = await model.findAndCountAll({
+        include: "bus",
         where: {
           isAssigned: {
             [Op.ne]: false,
@@ -99,21 +102,61 @@ const paginatedResult = (model) => {
         limit: limit,
         offset: page * limit,
       });
-  
-     
-    }else{
-      results.drivers = await model.findAndCountAll({include:'bus',
-      where: {
-        isAssigned: {
-          [Op.ne]: false,
+    } else {
+      results.drivers = await model.findAndCountAll({
+        include: "bus",
+        where: {
+          isAssigned: {
+            [Op.ne]: false,
+          },
         },
-      },
-    });
-  }
+      });
+    }
     res.paginatedResults = results;
 
     next();
   };
 };
 
-module.exports = { protect, restrictTo, paginatedResult };
+const busPagination = (model) => {
+
+  return async (req, res, next) => {
+
+    const count = await model.findAndCountAll();
+
+    const results = {};
+
+    if (req.query.page && req.query.limit) {
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+     
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      if (endIndex < count.count) {
+        results.next = {
+          page: page + 1,
+          limit: limit,
+        };
+      }
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit: limit,
+        };
+      }
+
+      results.buses = await model.findAndCountAll({
+        limit: limit,
+        offset: page * limit,
+      });
+    } else {
+      results.buses = await model.findAndCountAll();
+    }
+    res.paginatedResults = results;
+
+    next();
+  };
+};
+
+module.exports = { protect, restrictTo, paginatedResult,busPagination};

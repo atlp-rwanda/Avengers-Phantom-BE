@@ -41,6 +41,10 @@ module.exports = {
         allowNull:true,
         defaultValue:null
       },
+      isAssigned: {
+        type: DataTypes.BOOLEAN,
+        defaultValue:false
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
