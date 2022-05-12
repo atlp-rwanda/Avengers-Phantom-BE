@@ -1,5 +1,5 @@
-const { User, Bus } = require("../../../models");
-const sendEmail = require("../../utils/Email");
+const { User, Bus } = require("../../../../models");
+const sendEmail = require("../../../utils/Email");
 
 const AssignDriverToBus = async (req, res) => {
   try {

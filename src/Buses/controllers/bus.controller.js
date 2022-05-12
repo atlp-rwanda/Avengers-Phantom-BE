@@ -48,7 +48,12 @@ const createBus = async (req, res) => {
 const getAllBuses = async (req, res) => {
   try {
   
-  res.status(200).json(res.paginatedResults) 
+  res.status(200).json({status:"success",
+  data:{
+    buses:res.paginatedResults
+  }
+ 
+}) 
 
   } catch (error) {
     res.status(500).json({

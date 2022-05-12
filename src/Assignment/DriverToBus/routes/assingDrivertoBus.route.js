@@ -1,18 +1,18 @@
 const express = require("express");
-const { User } = require("./../../../models");
+const { User } = require("../../../../models");
 
 const {
   AssignDriverToBus,
   unAssignDriverToBus,
   AllAssignedDrivers,
   AllAssignedBusses,
-} = require("./../controllers/AssignDrivertoBus.controller");
+} = require("../../DriverToBus/controllers/AssignDrivertoBus.controller");
 
 const {
   protect,
   restrictTo,
   paginatedResult,
-} = require("./../../Middlewares/Middlewares");
+} = require("../../../Middlewares/Middlewares");
 
 const router = express.Router();
 

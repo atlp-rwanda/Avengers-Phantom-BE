@@ -71,16 +71,16 @@ const register = async (req, res) => {
       password: hashedPass,
     });
 
-    // const URL = `https://www.phantomavengers.rw`;
-    // const message = `
-    // Dear ${newUser.name},
-    // Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
-    // `;
-    // await sendEmail({
-    //   email: newUser.email,
-    //   subject: "Congratulations, welcome to Phantom.",
-    //   message,
-    // });
+    const URL = `https://www.phantomavengers.rw`;
+    const message = `
+    Dear ${newUser.name},
+    Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
+    `;
+    await sendEmail({
+      email: newUser.email,
+      subject: "Congratulations, welcome to Phantom.",
+      message,
+    });
 
     res.status(201).json({
       status: "success",
