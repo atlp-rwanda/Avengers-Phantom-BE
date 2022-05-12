@@ -252,4 +252,45 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword };
+const changePassword = async(req, res) => {
+
+  //1.Get token for logged in 
+  
+  const token = req.headers.authorization.split(' ')[1];
+  //2.Check token
+
+  if(!token){
+    return res.status(403).json({message: "you have to be logged in first"})
+  }
+
+  //3.get user from token by uuid
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRETE);
+  const uuid = decoded.uuid
+  const user = await User.findOne({
+    where: { uuid: uuid },
+  })
+
+  //4.get password from reques body
+  const {oldpassword, newpassword1, newpassword2 } = req.body;
+
+  //5. Check passwords
+  const password = await bcrypt.compare(oldpassword, user.password);
+  if(!password){
+    return res.status(400).json({message: "The old password is wrong, correct it and try again"})
+  }
+  if (newpassword1 !== newpassword2){
+    return res.json({message: "new password does not match"})
+  }
+
+  //6.hash password
+  const hashedPass = await bcrypt.hash(newpassword1, 12);
+
+  //update pass
+  user.password = hashedPass
+  await user.save()
+ 
+  res.json({message: "your password is updated successfully"})
+}
+
+module.exports = { register, login, forgotPassword, resetPassword , changePassword};

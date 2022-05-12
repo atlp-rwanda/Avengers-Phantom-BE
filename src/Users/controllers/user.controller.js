@@ -1,5 +1,6 @@
 // @ts-nocheck
 const { User } = require("./../../../models");
+// const jwtDecode = require("jwt-decode");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -115,6 +116,60 @@ const updateUser = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  try {
+    const { uuid } = req.params;
+    const user = await User.findOne({ where: { uuid } });
+    if (!user) {
+      return errorRes(res, 404, 'User Not Found');
+    }
+    const userId = req.user.dataValues.uuid; 
+    if (userId === uuid) {
+      const { 
+    name,
+    idNumber,
+    district,
+    sector,
+    cell,
+    gender,
+    email,
+    permitId,
+    telNumber,
+    carplate,
+    capacity,
+    vehicletype,
+       } = req.body;
+      const updatedUser = await User.update(
+        {
+    name,
+    idNumber,
+    district,
+    sector,
+    cell,
+    gender,
+    email,
+    permitId,
+    telNumber,
+    carplate,
+    capacity,
+    vehicletype,
+        },
+        { where: { uuid }, returning: true, plain: true }
+      );
+      const updatedResponse = updatedUser[1].dataValues;
+
+      return res.status(200).json({
+        message: 'User Updated',
+        data: updatedResponse
+      });
+    }
+    return res.status(403).json({ message: 'You can only update your profile'});
+  } catch (error) {
+    return res.status(500).json({ message: 'There was an error while updating', error: error.stack});
+  }
+};
+
+
 const deleteUser = async (req, res) => {
   const uuid = req.params.uuid;
   try {
@@ -126,7 +181,7 @@ const deleteUser = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      message: "User Deleted Successully",
+      message: "User Deleted Successfully",
     });
   } catch (error) {
     res.status(404).json({
@@ -136,4 +191,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUser, updateUser, updateRole, deleteUser };
+module.exports = { getAllUsers, getUser, updateUser, updateProfile,updateRole, deleteUser };
