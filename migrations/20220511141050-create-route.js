@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("buses", {
+    await queryInterface.createTable("routes", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,38 +12,29 @@ module.exports = {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      company: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      type: {
+      routeCode: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      plateNumber: {
+      startLocation: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      manufacturer: {
+      endLocation: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      capacity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      yearOfManufacturing: {
+      distance: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull:true,
-        defaultValue:null
-      },
-      isAssigned: {
-        type: DataTypes.BOOLEAN,
-        defaultValue:false
+      duration: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -56,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable("buses");
+    await queryInterface.dropTable("routes");
   },
 };

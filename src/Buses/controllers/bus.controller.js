@@ -1,4 +1,4 @@
-const { Bus, User } = require("./../../../models");
+const { Bus } = require("./../../../models");
 
 const createBus = async (req, res) => {
   try {
@@ -9,20 +9,16 @@ const createBus = async (req, res) => {
       manufacturer,
       capacity,
       yearOfManufacturing,
-      // userUuid,
     } = req.body;
 
-   
+    const bus = await Bus.findOne({ where: { plateNumber } });
 
-    // const user = await User.findOne({ where: { uuid: userUuid } });
-
-    // if (!user) {
-    //   return res.status(404).json({
-    //     status: "fail",
-    //     message: "No User found with That ID",
-    //   });
-    // }
-    // console.log("user", user);
+    if (bus) {
+      return res.status(403).json({
+        status: "fail",
+        message: "Sorry this bus is already existing, Please try again",
+      });
+    }
 
     const newBus = await Bus.create({
       company,
@@ -31,7 +27,6 @@ const createBus = async (req, res) => {
       manufacturer,
       capacity,
       yearOfManufacturing,
-      // userId: user.id,
     });
 
     res.status(201).json({
@@ -45,20 +40,21 @@ const createBus = async (req, res) => {
     res.status(500).json({
       status: "error",
       message: "Invalid Inputs Please Try Again",
-      err:error.stack,
+      err: error.stack,
     });
   }
 };
 
 const getAllBuses = async (req, res) => {
   try {
-    const buses = await Bus.findAll();
-    res.status(200).json({
-      status: "success",
-      data: {
-        buses,
-      },
-    });
+  
+  res.status(200).json({status:"success",
+  data:{
+    buses:res.paginatedResults
+  }
+ 
+}) 
+
   } catch (error) {
     res.status(500).json({
       status: "fail",

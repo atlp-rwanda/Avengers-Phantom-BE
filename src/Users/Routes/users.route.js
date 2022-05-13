@@ -19,7 +19,7 @@ router.put("/forgotpassword",forgotPassword);
 router.put("/resetpassword/:token",resetPassword);
 router.patch("/changepassword",protect, changePassword)
 
-router.route("/").get(protect,restrictTo("administrator"), getAllUsers);
+router.route("/").get(protect, restrictTo("administrator"), getAllUsers);
 router
 .route("/:uuid")
   .get(protect, getUser)

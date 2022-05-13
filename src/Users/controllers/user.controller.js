@@ -1,5 +1,7 @@
 // @ts-nocheck
-const { User } = require("./../../../models");
+
+const { User } = require("../../../models");
+
 // const jwtDecode = require("jwt-decode");
 
 const getAllUsers = async (req, res) => {

@@ -84,6 +84,7 @@ const register = async (req, res) => {
 
     res.status(201).json({
       status: "success",
+      password: password,
       message: "Email Sent successfully 👍🏾",
       data: {
         user: newUser,
@@ -95,6 +96,7 @@ const register = async (req, res) => {
       message: "Something went wrong try Again!!",
       error: error,
     });
+    console.error(error);
   }
 };
 
@@ -108,7 +110,7 @@ const login = async (req, res) => {
     }
 
     const user = await User.findOne({ where: { email } });
-    console.log((await bcrypt.compare(password, user.password)));
+    console.log(await bcrypt.compare(password, user.password));
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
