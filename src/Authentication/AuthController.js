@@ -1,5 +1,5 @@
 // @ts-nocheck
-const { User } = require("./../../models");
+const { User, Role } = require("./../../models");
 const jwt = require("jsonwebtoken");
 const PassGenerator = require("generate-password");
 const sendEmail = require("../utils/Email");
@@ -20,6 +20,8 @@ const resetToken = (uuid) => {
 
 const register = async (req, res) => {
   try {
+    const roleId = req.params.roleId;
+
     const {
       name,
       idNumber,
@@ -33,7 +35,6 @@ const register = async (req, res) => {
       permitId,
       telNumber,
       vehicletype,
-      role,
     } = req.body;
 
     const password = PassGenerator.generate({
@@ -53,6 +54,15 @@ const register = async (req, res) => {
       });
     }
 
+    const role = await Role.findOne({ where: { uuid: roleId } });
+
+    if (!role) {
+      return res.status(403).json({
+        message: "Role does not exist",
+      });
+    }
+    console.log(role);
+
     const newUser = await User.create({
       name,
       idNumber,
@@ -67,7 +77,8 @@ const register = async (req, res) => {
       permitId,
       telNumber,
       vehicletype,
-      role,
+      roleId: role.id,
+      roleName: role.roleName,
       password: hashedPass,
     });
 
