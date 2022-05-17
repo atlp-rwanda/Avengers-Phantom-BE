@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  db:
+    image: 'postgres'
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 'sassa'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: phantom
+    volumes:
+      - ./pgdata:/var/lib/postgres/data
+    ports:
+      - '5432:5432'
+
+  server:
+    image: avengersphantom-be
+    build: 
+      context: .
+    depends_on:
+      - db
+    ports:
+      - '5000:5000'
+
