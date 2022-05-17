@@ -1,5 +1,5 @@
 // @ts-nocheck
-const { User } = require("./../../models");
+const { User, Role } = require("./../../models");
 const jwt = require("jsonwebtoken");
 const PassGenerator = require("generate-password");
 const sendEmail = require("../utils/Email");
@@ -20,6 +20,8 @@ const resetToken = (uuid) => {
 
 const register = async (req, res) => {
   try {
+    const roleId = req.params.roleId;
+
     const {
       name,
       idNumber,
@@ -33,7 +35,6 @@ const register = async (req, res) => {
       permitId,
       telNumber,
       vehicletype,
-      role,
     } = req.body;
 
     const password = PassGenerator.generate({
@@ -53,6 +54,14 @@ const register = async (req, res) => {
       });
     }
 
+    const role = await Role.findOne({ where: { uuid: roleId } });
+
+    if (!role) {
+      return res.status(403).json({
+        message: "Role does not exist",
+      });
+    }
+
     const newUser = await User.create({
       name,
       idNumber,
@@ -67,11 +76,12 @@ const register = async (req, res) => {
       permitId,
       telNumber,
       vehicletype,
-      role,
+      roleId: role.id,
+      roleName: role.roleName,
       password: hashedPass,
     });
 
-    const URL = `https://www.phantomavengers.rw`;
+    const URL = `https://avengers-phantom-test.herokuapp.com/`;
     const message = `
     Dear ${newUser.name},
     Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
@@ -156,11 +166,9 @@ const forgotPassword = async (req, res) => {
     await user.save();
 
     //3)Send it to user's email
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${Token}`;
+    const resetURL = `http://localhost:8080/resertpasswordpage/${Token}`;
 
-    const message = `Forgot your password! please submit a PATCH request with your new password and confirmPassword to:${resetURL}.\n If you didn't forget your password please ignore this email.`;
+    const message = `Forgot your password! please click here:${resetURL}. to reset your password.\n If you didn't forget your password please ignore this email.`;
 
     //3) send email
 
@@ -252,45 +260,52 @@ const resetPassword = async (req, res) => {
   }
 };
 
-const changePassword = async(req, res) => {
+const changePassword = async (req, res) => {
+  //1.Get token for logged in
 
-  //1.Get token for logged in 
-  
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.headers.authorization.split(" ")[1];
   //2.Check token
 
-  if(!token){
-    return res.status(403).json({message: "you have to be logged in first"})
+  if (!token) {
+    return res.status(403).json({ message: "you have to be logged in first" });
   }
 
   //3.get user from token by uuid
 
   const decoded = jwt.verify(token, process.env.JWT_SECRETE);
-  const uuid = decoded.uuid
+  const uuid = decoded.uuid;
   const user = await User.findOne({
     where: { uuid: uuid },
-  })
+  });
 
   //4.get password from reques body
-  const {oldpassword, newpassword1, newpassword2 } = req.body;
+  const { oldpassword, newpassword1, newpassword2 } = req.body;
 
   //5. Check passwords
   const password = await bcrypt.compare(oldpassword, user.password);
-  if(!password){
-    return res.status(400).json({message: "The old password is wrong, correct it and try again"})
+  if (!password) {
+    return res
+      .status(400)
+      .json({ message: "The old password is wrong, correct it and try again" });
   }
-  if (newpassword1 !== newpassword2){
-    return res.json({message: "new password does not match"})
+  if (newpassword1 !== newpassword2) {
+    return res.json({ message: "new password does not match" });
   }
 
   //6.hash password
   const hashedPass = await bcrypt.hash(newpassword1, 12);
 
   //update pass
-  user.password = hashedPass
-  await user.save()
- 
-  res.json({message: "your password is updated successfully"})
-}
+  user.password = hashedPass;
+  await user.save();
 
-module.exports = { register, login, forgotPassword, resetPassword , changePassword};
+  res.json({ message: "your password is updated successfully" });
+};
+
+module.exports = {
+  register,
+  login,
+  forgotPassword,
+  resetPassword,
+  changePassword,
+};
