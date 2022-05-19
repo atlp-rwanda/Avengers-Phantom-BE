@@ -55,7 +55,7 @@ const protect = async (req, res, next) => {
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.user.roleName)) {
       return res.status(403).json({
         message: "You are not permitted to perform this action",
       });

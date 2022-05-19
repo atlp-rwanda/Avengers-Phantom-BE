@@ -32,7 +32,6 @@ router
   .patch(protect, restrictTo("administrator"), updateUser)
   .patch(protect, restrictTo("administrator"), updateRole)
   .delete(protect, restrictTo("administrator"), deleteUser);
-
 router.patch("/updateProfile/:uuid", protect, updateProfile);
 
 module.exports = router;

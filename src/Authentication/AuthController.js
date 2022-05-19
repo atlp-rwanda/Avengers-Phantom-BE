@@ -61,7 +61,6 @@ const register = async (req, res) => {
         message: "Role does not exist",
       });
     }
-    console.log(role);
 
     const newUser = await User.create({
       name,

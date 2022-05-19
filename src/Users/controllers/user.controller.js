@@ -1,7 +1,5 @@
 // @ts-nocheck
-
 const { User } = require("../../../models");
-
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAndCountAll();
