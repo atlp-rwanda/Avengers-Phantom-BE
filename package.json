@@ -4,7 +4,8 @@
   "description": "Avengers phantom Backend Project Setup",
   "main": "app.js",
   "scripts": {
-    "test": "mocha src/docs/test src/**/*.test.js",
+    "test": "nyc mocha src/docs/test src/**/*.test.js --timeout 30000",
+    "coverage": "nyc npm run test",
     "start": "node server.js",
     "start:dev": "nodemon --exec babel-node -r dotenv/config server.js",
     "migrate": "sequelize db:migrate",
@@ -37,6 +38,7 @@
     "i18next-http-middleware": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.7.3",
+    "nyc": "^15.1.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "swagger-jsdoc": "^6.2.0",
