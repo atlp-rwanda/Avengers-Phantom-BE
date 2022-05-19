@@ -38,6 +38,7 @@ const createRole = async (req, res) => {
       message: "Error while creating a new role",
       err: error,
     });
+    console.error(error);
   }
 };
 
@@ -57,6 +58,7 @@ const getAllRoles = async (req, res) => {
       message: "Error while getting all roles",
       err: error.stack,
     });
+    console.error(error);
   }
 };
 
@@ -68,7 +70,6 @@ const getRole = async (req, res) => {
       where: { uuid },
       include: ["user"],
     });
-
     if (!role) {
       return res.status(404).json({
         status: "fail",
@@ -112,15 +113,13 @@ const updateRole = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Role Updated Successfully",
-      data: {
-        role,
-      },
     });
   } catch (error) {
     res.status(500).json({
       status: "fail",
       message: "Error while updating a role",
       Error: error.stack,
+
     });
   }
 };
