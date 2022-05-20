@@ -20,6 +20,8 @@ const resetToken = (uuid) => {
 
 const register = async (req, res) => {
   try {
+    console.log("Hello123");
+
     const roleId = req.params.roleId;
 
     const {
@@ -94,7 +96,7 @@ const register = async (req, res) => {
 
     res.status(201).json({
       status: "success",
-      password: password,
+      // password: password,
       message: "Email Sent successfully 👍🏾",
       data: {
         user: newUser,

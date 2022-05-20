@@ -30,7 +30,7 @@ router
   .route("/:uuid")
   .get(protect, getUser)
   .patch(protect, restrictTo("administrator"), updateUser)
-  .patch(protect, restrictTo("administrator"), updateRole)
+  .put(protect, restrictTo("administrator"), updateRole)
   .delete(protect, restrictTo("administrator"), deleteUser);
 router.patch("/updateProfile/:uuid", protect, updateProfile);
 
