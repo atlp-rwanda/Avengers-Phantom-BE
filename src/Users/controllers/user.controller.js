@@ -44,10 +44,12 @@ const getUser = async (req, res) => {
 const updateRole = async (req, res) => {
   const uuid = req.params.uuid;
   const { roleName } = req.body;
+  console.log("role", roleName);
   try {
     const user = await User.findOne({ where: { uuid } });
 
     user.roleName = roleName;
+
     await user.save();
 
     res.status(200).json({
