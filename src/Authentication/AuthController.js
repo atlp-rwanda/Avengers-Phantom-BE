@@ -5,6 +5,7 @@ const PassGenerator = require("generate-password");
 const sendEmail = require("../utils/Email");
 const bcrypt = require("bcryptjs");
 const { promisify } = require("util");
+const { generateToken } = require("./../utils/GenerateToken");
 
 const signToken = (uuid) => {
   return jwt.sign({ uuid }, process.env.JWT_SECRETE, {
@@ -122,7 +123,6 @@ const login = async (req, res) => {
     }
 
     const user = await User.findOne({ where: { email } });
-    console.log(await bcrypt.compare(password, user.password));
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
@@ -163,7 +163,8 @@ const forgotPassword = async (req, res) => {
 
     //2) Generate random reset token
 
-    const Token = resetToken(user.uuid);
+    const Token = generateToken();
+
     user.passwordResetToken = Token;
     await user.save();
 
@@ -209,21 +210,6 @@ const resetPassword = async (req, res) => {
     }
 
     /**
-     * Verify Token
-     */
-
-    const decoded = await promisify(jwt.verify)(
-      Token,
-      process.env.RESET_PASSWORD_SECRETE
-    );
-
-    if (!decoded) {
-      return res.status(401).json({
-        message: "Your Token is Invalid or Expired",
-      });
-    }
-
-    /**
      * Check if user belongs to token exist in our database
      */
 
@@ -240,6 +226,7 @@ const resetPassword = async (req, res) => {
     /**
      * update User Password
      */
+
     const hashedPass = await bcrypt.hash(password, 12);
 
     user.password = hashedPass;
