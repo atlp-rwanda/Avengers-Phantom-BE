@@ -1,7 +1,11 @@
 {
   "development": {
     "username": "postgres",
+<<<<<<< HEAD
     "password": "keppi",
+=======
+    "password": "Uwineza3010@",
+>>>>>>> 40b1396 (Ft roles register drivers operators (#10))
     "database": "phantom",
     "host": "127.0.0.1",
     "port": "5432",
