@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable("routes", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,66 +10,31 @@ module.exports = {
       },
       uuid: {
         type: DataTypes.UUID,
-        allowNull: false,
         defaultValue: DataTypes.UUIDV4,
       },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      gender: {
+      routeCode: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      idNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      district: {
+      startLocation: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      sector: {
+      endLocation: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      cell: {
+      distance: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      email: {
+      duration: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      permitId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      telNumber: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      carplate: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      capacity: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      roleId: {
-        type: DataTypes.INTEGER,
-      },
-      roleName: {
-        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -78,9 +43,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-  }});
+      },
+    });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("routes");
   },
 };

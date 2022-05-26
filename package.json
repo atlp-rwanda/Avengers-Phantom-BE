@@ -4,14 +4,19 @@
   "description": "Avengers phantom Backend Project Setup",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --require @babel/register src/docs/test src/**/*.test.js",
-    "start:dev": "nodemon --exec babel-node server.js",
-    "migrate": "sequelize-cli db:migrate",
-    "migrate:undo": "sequelize-cli db:migrate:undo",
-    "seed": "sequelize-cli db:seed",
-    "create": "sequelize-cli db:create",
-    "drop:db": "sequelize-cli db:drop",
-    "seed:undo": "sequelize-cli db:seed:undo",
+    "test": "nyc mocha src/docs/test src/**/*.test.js --timeout 30000",
+    "coverage": "nyc npm run test",
+    "prestart": "npm run migrate && npm run seed",
+    "start": "node server.js",
+    "start:dev": "nodemon --exec babel-node -r dotenv/config server.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
+    "seed:undo:all": "npx sequelize-cli db:seed:undo:all",
+    "create": "npx sequelize-cli db:create",
+    "drop:db": "npx sequelize-cli db:drop",
+    "seed:undo": "npx sequelize-cli db:seed:undo",
     "lint": "eslint"
   },
   "repository": {
@@ -36,9 +41,11 @@
     "i18next-http-middleware": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.7.3",
+    "nyc": "^15.1.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.19.0",
+    "sequelize-cli": "^6.4.1",
     "swagger-jsdoc": "^6.2.0",
     "swagger-ui-express": "^4.3.0"
   },
@@ -60,6 +67,7 @@
     "eslint-plugin-react-hooks": "^4.4.0",
     "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
+    "nyc": "^15.1.0",
     "sinon": "^13.0.2"
   }
 }

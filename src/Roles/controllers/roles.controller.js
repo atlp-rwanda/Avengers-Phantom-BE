@@ -1,23 +1,36 @@
 // @ts-nocheck
-const { Roles } = require('../../../models');
+const { Role } = require("../../../models");
 
 const createRole = async (req, res) => {
   try {
-    const { roleName, permissions } = req.body;
+    const { roleName } = req.body;
 
-    console.log(roleName, permissions);
-    const newRole = await Roles.create({
+    if (!roleName) {
+      return res.status(403).json({
+        status: "fail",
+        message: "Please Provide a Role Name",
+      });
+    }
+
+    const role = await Role.findOne({ where: { roleName } });
+
+    if (role) {
+      return res.status(403).json({
+        status: "fail",
+        message: "Role Name is already existing, Please try again",
+      });
+    }
+
+    const newRole = await Role.create({
       roleName,
-      permissions
     });
 
-    console.log(newRole);
     res.status(201).json({
       status: req.t('success status'),
       message: req.t('role created message'),
       data: {
-        role: newRole
-      }
+        role: newRole,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -25,18 +38,20 @@ const createRole = async (req, res) => {
       message: req.t('try again message'),
       err: error
     });
+    console.error(error);
   }
 };
 
 const getAllRoles = async (req, res) => {
   try {
-    const roles = await Roles.findAll();
+    const roles = await Role.findAndCountAll();
+
     res.status(201).json({
       status: req.t('success status'),
       result: roles.length,
       data: {
-        roles: roles
-      }
+        roles,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -44,20 +59,30 @@ const getAllRoles = async (req, res) => {
       message: req.t('try again message'),
       err: error.stack
     });
+    console.error(error);
   }
 };
 
 const getRole = async (req, res) => {
-  const uuid = req.params.uuid;
   try {
-    const role = await Roles.findOne({
-      where: { uuid }
+    const uuid = req.params.uuid;
+
+    const role = await Role.findOne({
+      where: { uuid },
+      include: ["user"],
     });
+    if (!role) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No role Name found with that ID",
+      });
+    }
+
     res.status(200).json({
       status: req.t('success status'),
       data: {
-        role
-      }
+        role,
+      },
     });
   } catch (error) {
     res.status(404).json({
@@ -68,13 +93,21 @@ const getRole = async (req, res) => {
 };
 
 const updateRole = async (req, res) => {
-  const uuid = req.params.uuid;
-  const { roleName, permissions } = req.body;
   try {
-    const role = await Roles.findOne({ where: { uuid } });
+    const uuid = req.params.uuid;
+    const { roleName } = req.body;
+
+    const role = await Role.findOne({ where: { uuid } });
+
+    if (!role) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No role Name found with that ID",
+      });
+    }
 
     role.roleName = roleName;
-    role.permissions = permissions;
+
     await role.save();
 
     res.status(200).json({
@@ -93,24 +126,28 @@ const updateRole = async (req, res) => {
 };
 
 const deleteRole = async (req, res) => {
-  const uuid = req.params.uuid;
   try {
-    const role = await Roles.findOne({
-      where: { uuid }
+    const uuid = req.params.uuid;
+
+    const role = await Role.findOne({
+      where: { uuid },
     });
+
+    if (!role) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No role Name found with that ID",
+      });
+    }
 
     await role.destroy();
 
     res.status(200).json({
-      status: req.t('success status'),
       message: req.t('role deleted message')
     });
   } catch (error) {
     res.status(404).json({
       message: req.t('role wrong id'),
       Error: error.stack
-    });
-  }
-};
-
-module.exports = { createRole, getAllRoles, getRole, updateRole, deleteRole };
+    })
+  }}
