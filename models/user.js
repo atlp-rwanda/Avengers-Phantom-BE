@@ -25,13 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    name: 
-    {
-      uuid: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-      },
-      name: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -131,7 +125,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "",
       },
-    }},
+    },
     {
       sequelize,
       tableName: "users",

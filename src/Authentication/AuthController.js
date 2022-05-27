@@ -150,6 +150,51 @@ const login = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    //1) Get user based on posted email
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "There is no user with that email address",
+      });
+    }
+
+    //2) Generate random reset token
+
+    const Token = generateToken();
+
+    user.passwordResetToken = Token;
+    await user.save();
+
+    //3)Send it to user's email
+    const resetURL = `http://localhost:8080/resertpasswordpage/${Token}`;
+
+    const message = `Forgot your password! please click here:${resetURL}. to reset your password.\n If you didn't forget your password please ignore this email.`;
+
+    //3) send email
+
+    await sendEmail({
+      email: user.email,
+      subject: "Your password Reset Token (valid for 10 min )",
+      message,
+    });
+    res.status(200).json({
+      status: "sucess",
+      message: "Token sent to email",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Error while sending the email please try again after some times",
+      err: error.stack,
+    });
+  }
+};
+
+
 const resetPassword = async (req, res) => {
   try {
     /**

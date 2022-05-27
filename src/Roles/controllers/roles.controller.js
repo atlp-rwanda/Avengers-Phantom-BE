@@ -151,3 +151,5 @@ const deleteRole = async (req, res) => {
       Error: error.stack
     })
   }}
+
+  module.exports = { createRole, getAllRoles, getRole, updateRole, deleteRole };
