@@ -40,8 +40,6 @@
     "i18next-fs-backend": "^1.1.4",
     "i18next-http-middleware": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mysql2": "^2.3.3",
-    "node": "^17.7.2",
     "nodemailer": "^6.7.3",
     "nyc": "^15.1.0",
     "pg": "^8.7.3",
@@ -68,8 +66,7 @@
     "eslint-plugin-react-hooks": "^4.4.0",
     "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
-    "sequelize": "^6.20.1",
-    "sequelize-cli": "^6.4.1",
+    "nyc": "^15.1.0",
     "sinon": "^13.0.2"
   }
 }
