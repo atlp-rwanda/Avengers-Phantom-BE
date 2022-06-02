@@ -57,7 +57,7 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      vehicletype: {
+      email: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -71,14 +71,6 @@ module.exports = {
       roleName: {
         type: DataTypes.STRING,
       },
-      isAssigned: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      passwordResetToken: {
-        type: DataTypes.STRING,
-        defaultValue: "",
-      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
@@ -86,8 +78,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-      },
-    });
+  }});
   },
   async down(queryInterface, DataTypes) {
     await queryInterface.dropTable("users");
