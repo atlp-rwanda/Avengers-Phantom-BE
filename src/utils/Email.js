@@ -1,5 +1,9 @@
 // @ts-nocheck
 const nodemailer = require("nodemailer")
+const dotenv = require("dotenv");
+
+dotenv.config({ path: "../config.env" });
+
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
