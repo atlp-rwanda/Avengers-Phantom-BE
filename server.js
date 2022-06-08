@@ -1,6 +1,8 @@
 const app = require("./app.js");
 
-const PORT = process.env.PORT || 8000;
+const { sequelize } = require("./models");
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   app.emit("Started");

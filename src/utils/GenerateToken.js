@@ -1,4 +1,4 @@
-export const generateToken = () => {
+const generateToken = () => {
   var text = "";
   var possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -8,3 +8,5 @@ export const generateToken = () => {
 
   return "bestprojectever" + text + "phantompoweredbyavengersteam";
 };
+
+module.exports = { generateToken };
