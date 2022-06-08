@@ -69,7 +69,29 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
       },
+      roleId: {
+        type: DataTypes.INTEGER,
+      },
+      roleName: {
+        type: DataTypes.STRING,
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> develop
+      },
+      roleId: {
+        type: DataTypes.INTEGER,
+      },
+      roleName: {
+        type: DataTypes.STRING,
+=======
+=======
+>>>>>>> develop
+      },
+<<<<<<< HEAD
+=======
       roleId: {
         type: DataTypes.INTEGER,
       },
@@ -92,6 +114,18 @@ module.exports = {
         defaultValue: "",
 >>>>>>> 1254268... ft(roles):user roles
       },
+<<<<<<< HEAD
+=======
+>>>>>>> develop
+      isAssigned: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      passwordResetToken: {
+        type: DataTypes.STRING,
+        defaultValue: "",
+>>>>>>> 1254268... ft(roles):user roles
+      },
       isAssigned: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -100,6 +134,10 @@ module.exports = {
         type: DataTypes.STRING,
         defaultValue: "",
       },
+<<<<<<< HEAD
+=======
+>>>>>>> 9720012... develop
+>>>>>>> develop
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
