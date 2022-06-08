@@ -38,12 +38,12 @@ module.exports = {
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull:true,
-        defaultValue:null
+        allowNull: true,
+        defaultValue: null,
       },
       isAssigned: {
         type: DataTypes.BOOLEAN,
-        defaultValue:false
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

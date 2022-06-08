@@ -57,6 +57,10 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      vehicletype: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -78,7 +82,8 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-  }});
+      },
+    });
   },
   async down(queryInterface, DataTypes) {
     await queryInterface.dropTable("users");
