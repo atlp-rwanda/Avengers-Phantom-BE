@@ -19,7 +19,6 @@ const { protect, restrictTo } = require("./../../Middlewares/Middlewares");
 
 const router = express.Router();
 
-
 router.post("/register/:roleId", register);
 router.post("/login", login);
 router.put("/forgotpassword", forgotPassword);
