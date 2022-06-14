@@ -10,7 +10,7 @@ module.exports = {
     host: DB_HOST,
     dialect: "postgres",
   },
-  docker:{
+  docker: {
     "username": DB_USER_NAME,
     "password": DB_PASSWORD,
     "database": DATABASE_NAME,
@@ -25,7 +25,7 @@ module.exports = {
     dialect: "postgres",
   },
   production: {
-    username: DATABASE_URL,
+    username: DB_USER_NAME,
     password: DB_PASSWORD,
     database: DATABASE_NAME,
     host: DB_HOST,
