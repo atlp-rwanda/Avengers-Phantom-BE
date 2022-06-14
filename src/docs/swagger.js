@@ -1,6 +1,7 @@
 const userRouteDoc = require("./../Users/Users.docs");
 const roleRouteDoc = require("./../Roles/roles.docs");
 const loginRouteDoc = require("./../Authentication/Login.docs");
+const routeRouteDoc = require("./../Route/route.docs");
 
 const swaggerDoc = {
   openapi: "3.0.0",
@@ -48,11 +49,16 @@ const swaggerDoc = {
       name: "Role",
       description: "Role Routes",
     },
+    {
+      name: "Route",
+      description: "Bus Routes",
+    },
   ],
   paths: {
     ...userRouteDoc,
     ...loginRouteDoc,
     ...roleRouteDoc,
+    ...routeRouteDoc,
   },
 };
 module.exports = swaggerDoc;

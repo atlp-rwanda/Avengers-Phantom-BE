@@ -14,22 +14,18 @@ const createRoute = async (req, res) => {
       !distance ||
       !duration
     ) {
-      return res
-        .status(400)
-        .json({
-          status: "fail",
-          message: "Invalid Data, Please provide valid information",
-        });
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid Data, Please provide valid information",
+      });
     }
 
     const route = await Route.findOne({ where: { routeCode } });
     if (route) {
-      return res
-        .status(403).json({
-           status: "fail",
-           message: "This route is already registered"
-           });
-    
+      return res.status(403).json({
+        status: "fail",
+        message: "This route is already registered",
+      });
     }
 
     const newRoute = await Route.create({
@@ -53,14 +49,13 @@ const createRoute = async (req, res) => {
       message: "Error while creating a new route",
       err: error.stack,
     });
-    console.error(error)
+    console.error(error);
   }
 };
 
 const getAllRoutes = async (req, res) => {
   try {
-   res.status(200).json({status:"success",routes:res.paginatedResults}) 
-
+    res.status(200).json({ status: "success", routes: res.paginatedResults });
   } catch (error) {
     res.status(500).json({
       status: "fail",
@@ -167,4 +162,10 @@ const deleteRoute = async (req, res) => {
   }
 };
 
-module.exports = { createRoute,getAllRoutes, getRoute, updateRoute, deleteRoute };
+module.exports = {
+  createRoute,
+  getAllRoutes,
+  getRoute,
+  updateRoute,
+  deleteRoute,
+};
