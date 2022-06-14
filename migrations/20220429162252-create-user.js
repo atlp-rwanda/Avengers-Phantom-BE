@@ -79,6 +79,14 @@ module.exports = {
         type: DataTypes.STRING,
         defaultValue: "",
       },
+      profilePicture: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue : [],
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: "",
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { msg: "Driver or Operator must have an ID" },
           notEmpty: { msg: "ID must not be empty" },
         },
+        unique: true,
       },
 
       district: {
@@ -83,10 +84,12 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: "Email must not be empty" },
           isEmail: { msg: "Provide a valid email address" },
         },
+        unique: true
       },
       permitId: {
         type: DataTypes.STRING,
         allowNull: true,
+        unique: true
       },
       telNumber: {
         type: DataTypes.INTEGER,
@@ -95,10 +98,12 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { msg: "Driver or Operator must have Telephone Number" },
           notEmpty: { msg: "Telephone must not be empty" },
         },
+        unique: true
       },
       carplate: {
         type: DataTypes.STRING,
         allowNull: true,
+        unique: true
       },
       capacity: {
         type: DataTypes.INTEGER,
@@ -121,6 +126,10 @@ module.exports = (sequelize, DataTypes) => {
       isAssigned: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      profilePicture: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: [],
       },
       passwordResetToken: {
         type: DataTypes.STRING,

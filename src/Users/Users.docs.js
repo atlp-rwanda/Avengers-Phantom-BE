@@ -63,6 +63,11 @@ const createUser = {
               description: "User National ID",
               example: 123456789,
             },
+            gender: {
+              type: "string",
+              decription: "User's Gender",
+              example: "male",
+            },
             district: {
               type: "string",
               decription: "User's District",

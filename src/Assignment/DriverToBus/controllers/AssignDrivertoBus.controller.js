@@ -23,10 +23,11 @@ const AssignDriverToBus = async (req, res) => {
         status: "fail",
         message: "Driver is already assigned to a Bus",
       });
-    } else {
-      user.isAssigned = true;
-      await user.save();
-    }
+    } 
+    // else {
+    //   user.isAssigned = true;
+    //   await user.save();
+    // }
 
     const bus = await Bus.findOne({ where: { uuid: busId } });
 
@@ -43,6 +44,8 @@ const AssignDriverToBus = async (req, res) => {
     } else {
       bus.userId = user.id;
       bus.isAssigned = true;
+      user.isAssigned = true;
+      await user.save();
       await bus.save();
     }
 
@@ -92,10 +95,11 @@ const unAssignDriverToBus = async (req, res) => {
         status: "fail",
         message: "The user is not assigned to any bus, Please try again",
       });
-    } else {
-      user.isAssigned = false;
-      await user.save();
-    }
+    } 
+    // else {
+    //  user.isAssigned = true;
+    //   await user.save();
+    // }
 
     const bus = await Bus.findOne({ where: { uuid: busId } });
 
@@ -112,6 +116,8 @@ const unAssignDriverToBus = async (req, res) => {
     } else {
       bus.userId = null;
       bus.isAssigned = false;
+      user.isAssigned = true;
+      await user.save();
       await bus.save();
     }
 

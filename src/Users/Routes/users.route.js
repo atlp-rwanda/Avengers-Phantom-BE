@@ -15,7 +15,8 @@ const {
   changeRole,
 } = require("./../controllers/user.controller");
 
-const { protect, restrictTo } = require("./../../Middlewares/Middlewares");
+const { protect, restrictTo} = require("./../../Middlewares/Middlewares");
+const{ parser}=require('../../utils/multer')
 
 const router = express.Router();
 
@@ -32,6 +33,7 @@ router
   .patch(protect, restrictTo("administrator"), updateUser)
   .put(protect, restrictTo("administrator"), changeRole)
   .delete(protect, restrictTo("administrator"), deleteUser);
-router.patch("/updateProfile/:uuid", protect, updateProfile);
+router.patch("/updateProfile/:uuid", protect,  parser.array('user_image'), updateProfile);
+
 
 module.exports = router;
