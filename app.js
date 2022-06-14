@@ -12,6 +12,7 @@ const roleRouter = require("./src/Roles/Routes/roles.route");
 const busRouter = require("./src/Buses/routes/bus.route");
 const AssignAndUnAssignRouter = require("./src/Assignment/DriverToBus/routes/assingDrivertoBus.route");
 const routesRouter = require("./src/Route/Routes/route.route");
+const stopsRouter = require('./src/RouteStops/Routes/stop.route');
 const busToRouteRouter = require("./src/Assignment/BusToRoutes/Routes/AssignmentRoutes");
 
 i18next
@@ -42,6 +43,7 @@ app.use("/api/v1/buses", busRouter);
 app.use("/api/v1/assignment", AssignAndUnAssignRouter);
 app.use("/api/v1/routes", routesRouter);
 app.use("/api/v1/assignbus", busToRouteRouter);
+app.use('/api/v1/stops', stopsRouter);
 
 app.use(
   "/documentation",

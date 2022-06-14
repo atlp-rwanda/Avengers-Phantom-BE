@@ -84,7 +84,7 @@ const protect_user = async (req, res, next) => {
       });
     }
     const uuid2 = req.params.uuid;
-    if(uuid!==uuid2){
+    if (uuid !== uuid2) {
       return res.status(403).json({
         message: 'you are not allowed to perfom this action',
       });

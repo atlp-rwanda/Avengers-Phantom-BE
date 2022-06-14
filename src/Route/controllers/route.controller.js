@@ -26,10 +26,10 @@ const createRoute = async (req, res) => {
     if (route) {
       return res
         .status(403).json({
-           status: "fail",
-           message: "This route is already registered"
-           });
-    
+          status: "fail",
+          message: "This route is already registered"
+        });
+
     }
 
     const newRoute = await Route.create({
@@ -58,8 +58,12 @@ const createRoute = async (req, res) => {
 };
 
 const getAllRoutes = async (req, res) => {
+  let routes = res.paginatedResults
   try {
-   res.status(200).json({status:"success",routes:res.paginatedResults}) 
+    res.status(200).json({
+      status: "success",
+      routes
+    })
 
   } catch (error) {
     res.status(500).json({
@@ -139,19 +143,16 @@ const updateRoute = async (req, res) => {
 
 const deleteRoute = async (req, res) => {
   try {
-    const uuid = req.params.uuid;
+    const { id } = req.params;
 
-    const route = await Route.findOne({
-      where: { uuid },
-    });
-
+    const route = await Route.findByPk(id)
+    console.log('========', route)
     if (!route) {
       return res.status(404).json({
         status: "fail",
         message: "No route with that ID",
       });
     }
-
     await route.destroy();
 
     res.status(200).json({
@@ -167,4 +168,4 @@ const deleteRoute = async (req, res) => {
   }
 };
 
-module.exports = { createRoute,getAllRoutes, getRoute, updateRoute, deleteRoute };
+module.exports = { createRoute, getAllRoutes, getRoute, updateRoute, deleteRoute };
