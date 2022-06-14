@@ -1,6 +1,10 @@
 const userRouteDoc = require("./../Users/Users.docs");
 const roleRouteDoc = require("./../Roles/roles.docs");
 const loginRouteDoc = require("./../Authentication/Login.docs");
+const busRouteDoc = require("./../Buses/docs/bus.docs")
+const dotenv = require('dotenv');
+
+dotenv.config({path:'./config.env'})
 
 const swaggerDoc = {
   openapi: "3.0.0",
@@ -11,7 +15,7 @@ const swaggerDoc = {
   },
   servers: [
     {
-      url: "http://localhost:9000",
+      url: `http://localhost:${process.env.PORT}`,
       description: "Local dev Server",
     },
     {
@@ -48,11 +52,16 @@ const swaggerDoc = {
       name: "Role",
       description: "Role Routes",
     },
+    {
+      name: "Buses",
+      description: "Buses routes",
+    },
   ],
   paths: {
     ...userRouteDoc,
     ...loginRouteDoc,
     ...roleRouteDoc,
+    ...busRouteDoc
   },
 };
 module.exports = swaggerDoc;

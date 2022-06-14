@@ -15,12 +15,12 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(protect, restrictTo("operator"), createBus)
-  .get(protect, restrictTo("operator"), busPagination(Bus), getAllBuses);
+  .post(protect, restrictTo("operator","administrator"), createBus)
+  .get(protect, restrictTo("operator","administrator"), busPagination(Bus), getAllBuses);
 router
   .route("/:uuid")
-  .get(protect, restrictTo("operator"), getBus)
-  .patch(protect, restrictTo("operator"), updateBus)
-  .delete(protect, restrictTo("operator"), deleteBus);
+  .get(protect, restrictTo("operator","administrator"), getBus)
+  .patch(protect, restrictTo("operator","administrator"), updateBus)
+  .delete(protect, restrictTo("operator","administrator"), deleteBus);
 
 module.exports = router;
