@@ -25,7 +25,7 @@ const login = {
   },
   responses: {
     200: {
-      description: "logged in",
+      description: "logged in successfully",
     },
     401: {
       description: "Something Went wrong!!!",
