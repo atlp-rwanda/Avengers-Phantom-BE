@@ -39,7 +39,6 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/roles", roleRouter);
 app.use("/api/v1/buses", busRouter);
-app.use("/api/v1/users", userRouter);
 app.use("/api/v1/assignment", AssignAndUnAssignRouter);
 app.use("/api/v1/routes", routesRouter);
 app.use("/api/v1/assignbus", busToRouteRouter);

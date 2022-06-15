@@ -57,6 +57,10 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      vehicletype: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -87,6 +91,14 @@ module.exports = {
         type: DataTypes.STRING,
         defaultValue: "",
 >>>>>>> 1254268... ft(roles):user roles
+      },
+      isAssigned: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      passwordResetToken: {
+        type: DataTypes.STRING,
+        defaultValue: "",
       },
       createdAt: {
         allowNull: false,
