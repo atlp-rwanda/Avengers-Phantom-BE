@@ -38,6 +38,15 @@ const createUser = {
   tags: ["User"],
   summary: "Create  a User",
   description: "Create  a User",
+  parameters: [
+    {
+      name: "uuid",
+      in: "path",
+      decription: "This is an ID of the Route",
+      type: "string",
+      example: "9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2",
+    },
+  ],
   requestBody: {
     content: {
       "application/json": {
@@ -48,6 +57,11 @@ const createUser = {
               type: "string",
               description: "Name of the User",
               example: "Jean De Dieu",
+            },
+            gender: {
+              type: "string",
+              description: "gender",
+              example: "male",
             },
             idNumber: {
               type: "integer",
@@ -74,35 +88,11 @@ const createUser = {
               description: "User email address",
               example: "avengers.phantom.io",
             },
-            permitId: {
-              type: "integer",
-              decription: "Permit Id for Drivers",
-              example: "qwerty12",
-            },
+
             telNumber: {
               type: "integer",
               decription: "User Phone Number",
               example: 784860836,
-            },
-            carplate: {
-              type: "string",
-              decription: "Car plate Number for Drivers",
-              example: "RAB123C",
-            },
-            capacity: {
-              type: "integer",
-              decription: "capacity of users for Drivers ",
-              example: 80,
-            },
-            vehicletype: {
-              type: "string",
-              decription: "Type of a car for Drivers",
-              example: "Litico",
-            },
-            role: {
-              type: "string",
-              description: "Role Associated to User for accessing the system",
-              example: "Admin",
             },
           },
         },
@@ -110,7 +100,7 @@ const createUser = {
     },
   },
   responses: {
-    200: {
+    201: {
       description: "Created",
       content: {
         "application/json": {
@@ -251,6 +241,62 @@ const updateUser = {
       example: "f3b7f03d-641b-4ebd-9296-5c942bb971b6",
     },
   ],
+  requestBody: {
+    name: "Patch",
+    in: "body",
+    // required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "Name of the User",
+              example: "Jean De Dieu",
+            },
+            gender: {
+              type: "string",
+              description: "gender",
+              example: "male",
+            },
+            idNumber: {
+              type: "integer",
+              description: "User National ID",
+              example: 123456789,
+            },
+            district: {
+              type: "string",
+              decription: "User's District",
+              example: "Kicukiro",
+            },
+            sector: {
+              type: "string",
+              decription: "User's Sector",
+              example: "Kicukiro",
+            },
+            cell: {
+              type: "string",
+              decription: "User's Gender",
+              example: "male",
+            },
+            email: {
+              type: "string",
+              description: "User email address",
+              example: "avengers.phantom.io",
+            },
+
+            telNumber: {
+              type: "integer",
+              decription: "User Phone Number",
+              example: 784860836,
+            },
+          },
+        },
+      },
+    },
+  },
+
   responses: {
     200: {
       description: "OK",
@@ -295,6 +341,8 @@ const updateUser = {
 const userRouteDoc = {
   "/api/v1/users": {
     get: allUsers,
+  },
+  "/api/v1/users/register/{uuid}": {
     post: createUser,
   },
   "/api/v1/users/{uuid}": {
