@@ -243,7 +243,7 @@ const updateUser = {
   requestBody: {
     name: "Patch",
     in: "body",
-    // required: true,
+    required: true,
     content: {
       "application/json": {
         schema: {
