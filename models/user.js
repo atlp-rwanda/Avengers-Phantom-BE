@@ -20,12 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       };
     }
   }
-  User.init({
-    uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
-    },
-    name: {
+  User.init(
+    {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

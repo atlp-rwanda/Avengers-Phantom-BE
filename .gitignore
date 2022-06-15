@@ -106,4 +106,8 @@ dist
 
 # Environments variables
 config.env
+<<<<<<< HEAD
 .env
+=======
+.env
+>>>>>>> 1254268... ft(roles):user roles
