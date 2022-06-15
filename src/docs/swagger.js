@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 const userRouteDoc = require('./../Users/Users.docs');
 const roleRouteDoc = require('./../Roles/roles.docs');
+=======
+const userRouteDoc = require("./../Users/Users.docs");
+const roleRouteDoc = require("./../Roles/roles.docs");
+const loginRouteDoc = require("./../Authentication/Login.docs");
+const routeRouteDoc = require("./../Route/route.docs");
+>>>>>>> 404273e... documentation and test
 
 const swaggerDoc = {
   openapi: '3.0.0',
@@ -10,8 +17,13 @@ const swaggerDoc = {
   },
   servers: [
     {
+<<<<<<< HEAD
       url: 'http://localhost:8000',
       description: 'Local dev Server'
+=======
+      url: "http://localhost:9000",
+      description: "Local dev Server",
+>>>>>>> 404273e... documentation and test
     },
     {
       url: 'http://www.avengersphantom.com',
@@ -40,6 +52,7 @@ const swaggerDoc = {
       description: 'User Routes'
     },
     {
+<<<<<<< HEAD
       name: 'Role',
       description: 'Role Routes'
     }
@@ -48,5 +61,17 @@ const swaggerDoc = {
     ...userRouteDoc,
     ...roleRouteDoc
   }
+=======
+      name: "Route",
+      description: "Bus Routes",
+    },
+  ],
+  paths: {
+    ...userRouteDoc,
+    ...loginRouteDoc,
+    ...roleRouteDoc,
+    ...routeRouteDoc,
+  },
+>>>>>>> 404273e... documentation and test
 };
 module.exports = swaggerDoc;
