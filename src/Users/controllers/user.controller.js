@@ -5,7 +5,7 @@ const getAllUsers = async (req, res) => {
     const users = await User.findAndCountAll();
 
     res.status(201).json({
-      status: req.t('success status'),
+      status: req.t("success status"),
       result: users.length,
       data: {
         users: users,
@@ -13,8 +13,8 @@ const getAllUsers = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      status: req.t('fail status'),
-      message: req.t('try again message'),
+      status: req.t("fail status"),
+      message: req.t("try again message"),
       err: error.stack,
     });
   }
@@ -25,9 +25,10 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findOne({
       where: { uuid },
+      include: ["role"],
     });
     res.status(200).json({
-      status: req.t('success message'),
+      status: req.t("success message"),
       data: {
         user,
       },
@@ -43,28 +44,27 @@ const getUser = async (req, res) => {
 const updateRole = async (req, res) => {
   const uuid = req.params.uuid;
   try {
-  const { roleName } = req.body;
-  console.log("role", roleName);
+    const { roleName } = req.body;
+    console.log("role", roleName);
     const user = await User.findOne({ where: { uuid } });
 
     user.roleName = roleName;
-
     await user.save();
 
     res.status(200).json({
-      status: req.t('success status'),
-      message: req.t('user role updated message'),
+      status: req.t("success status"),
+      message: req.t("user role updated message"),
       data: {
         user,
       },
     });
-  }catch (error) {
+  } catch (error) {
     res.status(404).json({
-      message: req.t('user wrong ID'),
+      message: req.t("user wrong ID"),
       Error: error.stack,
     });
-  };
-}
+  }
+};
 const updateUser = async (req, res) => {
   const uuid = req.params.uuid;
   const {
@@ -99,15 +99,15 @@ const updateUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      status: req.t('success status'),
-      message: req.t('user update message'),
+      status: req.t("success status"),
+      message: req.t("user update message"),
       data: {
         user,
       },
     });
   } catch (error) {
     res.status(404).json({
-      message: req.t('user wrong ID'),
+      message: req.t("user wrong ID"),
       Error: error.stack,
     });
   }
@@ -181,12 +181,12 @@ const deleteUser = async (req, res) => {
     await user.destroy();
 
     res.status(200).json({
-      status: req.t('success status'),
-      message: req.t('user deleted message'),
+      status: req.t("success status"),
+      message: req.t("user deleted message"),
     });
   } catch (error) {
     res.status(404).json({
-      message: req.t('user wrong ID'),
+      message: req.t("user wrong ID"),
       Error: error.stack,
     });
   }

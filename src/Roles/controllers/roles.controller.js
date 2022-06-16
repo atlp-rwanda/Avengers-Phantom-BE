@@ -26,17 +26,17 @@ const createRole = async (req, res) => {
     });
 
     res.status(201).json({
-      status: req.t('success status'),
-      message: req.t('role created message'),
+      status: req.t("success status"),
+      message: req.t("role created message"),
       data: {
         role: newRole,
       },
     });
   } catch (error) {
     res.status(500).json({
-      status: req.t('fail status'),
-      message: req.t('try again message'),
-      err: error
+      status: req.t("fail status"),
+      message: req.t("try again message"),
+      err: error,
     });
     console.error(error);
   }
@@ -47,7 +47,7 @@ const getAllRoles = async (req, res) => {
     const roles = await Role.findAndCountAll();
 
     res.status(201).json({
-      status: req.t('success status'),
+      status: req.t("success status"),
       result: roles.length,
       data: {
         roles,
@@ -55,9 +55,9 @@ const getAllRoles = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      status: req.t('fail status'),
-      message: req.t('try again message'),
-      err: error.stack
+      status: req.t("fail status"),
+      message: req.t("try again message"),
+      err: error.stack,
     });
     console.error(error);
   }
@@ -79,15 +79,15 @@ const getRole = async (req, res) => {
     }
 
     res.status(200).json({
-      status: req.t('success status'),
+      status: req.t("success status"),
       data: {
         role,
       },
     });
   } catch (error) {
     res.status(404).json({
-      message: req.t('role wrong id'),
-      Error: error.stack
+      message: req.t("role wrong id"),
+      Error: error.stack,
     });
   }
 };
@@ -111,16 +111,16 @@ const updateRole = async (req, res) => {
     await role.save();
 
     res.status(200).json({
-      status: req.t('success status'),
-      message: req.t('role update message'),
+      status: req.t("success status"),
+      message: req.t("role update message"),
       data: {
-        role
-      }
+        role,
+      },
     });
   } catch (error) {
     res.status(404).json({
-      message: req.t('role wrong id'),
-      Error: error.stack
+      message: req.t("role wrong id"),
+      Error: error.stack,
     });
   }
 };
@@ -143,13 +143,14 @@ const deleteRole = async (req, res) => {
     await role.destroy();
 
     res.status(200).json({
-      message: req.t('role deleted message')
+      message: req.t("role deleted message"),
     });
   } catch (error) {
     res.status(404).json({
-      message: req.t('role wrong id'),
-      Error: error.stack
-    })
-  }}
+      message: req.t("role wrong id"),
+      Error: error.stack,
+    });
+  }
+};
 
-  module.exports = { createRole, getAllRoles, getRole, updateRole, deleteRole };
+module.exports = { createRole, getAllRoles, getRole, updateRole, deleteRole };
