@@ -3,6 +3,8 @@ const roleRouteDoc = require("./../Roles/roles.docs");
 const loginRouteDoc = require("./../Authentication/Login.docs");
 const busRouteDoc = require("./../Buses/docs/bus.docs");
 const routeRouteDoc = require("./../Route/route.docs");
+const AssignDriverToBusDoc = require("./../Assignment/DriverToBus/DriverToBus.docs");
+const AssignBusToRouteDoc = require("./../Assignment/BusToRoutes/BusToRoute.docs");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./config.env" });
@@ -18,16 +20,10 @@ const swaggerDoc = {
     {
       url: `http://localhost:${process.env.PORT}`,
       description: "Local dev Server",
-
-      url: "http://localhost:8000",
-      description: "Local dev Server",
-
-      url: "http://localhost:9000",
-      description: "Local dev Server",
     },
     {
-      url: "http://www.avengersphantom.com",
-      description: "production dev server",
+      url: "https://new-avengers-be-deploy.herokuapp.com/",
+      description: "Production dev server",
     },
   ],
   components: {
@@ -67,6 +63,14 @@ const swaggerDoc = {
       name: "Route",
       description: "Buses routes",
     },
+    {
+      name: "Assign driver",
+      description: "Assingning driver to buses",
+    },
+    {
+      name: "Assign buses",
+      description: "assigning bus to route",
+    },
   ],
 
   paths: {
@@ -75,6 +79,8 @@ const swaggerDoc = {
     ...roleRouteDoc,
     ...busRouteDoc,
     ...routeRouteDoc,
+    ...AssignDriverToBusDoc,
+    ...AssignBusToRouteDoc,
   },
 };
 module.exports = swaggerDoc;
