@@ -1,7 +1,9 @@
-const allUsers = {
-  tags: ["User"],
-  summary: "Get All Users",
-  description: "List of All Users",
+const { types } = require("pg");
+
+const allRoute = {
+  tags: ["Route"],
+  summary: "Get All Route",
+  description: "List of All Routes",
   responses: {
     200: {
       description: "OK",
@@ -9,13 +11,6 @@ const allUsers = {
         "application/json": {
           schema: {
             type: "object",
-            example: {
-              data: {
-                name: "Jean De Dieu",
-                email: "jeanndo.phanton.avengers.io",
-                role: "admin",
-              },
-            },
           },
         },
       },
@@ -24,12 +19,12 @@ const allUsers = {
       description: "Something Went wrong!!!",
     },
   },
-}
+};
 
-const createUser = {
-  tags: ["User"],
-  summary: "Create  a User",
-  description: "Create  a User",
+const createRoute = {
+  tags: ["Route"],
+  summary: "Create Route",
+  description: "create Route",
   requestBody: {
     content: {
       "application/json": {
@@ -38,18 +33,33 @@ const createUser = {
           properties: {
             name: {
               type: "string",
-              description: "Name of the User",
-              example: "Jean De Dieu",
+              description: "Name of the Route",
+              example: "Remera Kicukiro",
             },
-            email: {
+            routeCode: {
               type: "string",
-              description: "User email address",
-              example: "avengers.phantom.io",
+              description: "Route code",
+              example: "NY",
             },
-            role: {
+            startLocation: {
               type: "string",
-              description: "User must have a role to access the application",
-              example: "admin",
+              decription: "Location",
+              example: "NYAMIRAMBO",
+            },
+            endLocation: {
+              type: "string",
+              decription: "Destination",
+              example: "Kicukiro",
+            },
+            distance: {
+              type: "string",
+              decription: "distance in km",
+              example: "7Km",
+            },
+            duration: {
+              type: "string",
+              description: "hours",
+              example: "1hr",
             },
           },
         },
@@ -57,41 +67,64 @@ const createUser = {
     },
   },
   responses: {
-    201: {
+    200: {
       description: "Created",
       content: {
         "application/json": {
           schema: {
             type: "object",
-            example: {
-              status: "success",
-              data: {
-                name: "Jean De Dieu UKWITEGETSE",
-                email: "jeanndo.dev.io",
-                role: "admin",
-              },
-            },
           },
         },
       },
     },
-    400: {
-      description: "Invalid Data!!",
+    500: {
+      description: "Something Went wrong!!!",
     },
   },
-}
+};
 
-const getUserByID = {
-  tags: ["User"],
-  summary: "Get a User By ID",
-  description: "Get a User By ID",
+const getRouteByID = {
+  tags: ["Route"],
+  summary: "Get One Route",
+  description: "One Route",
   parameters: [
     {
       name: "uuid",
       in: "path",
-      decription: "This is an ID of a User",
+      decription: "This is an ID of the Route",
       type: "string",
-      example: "c5697c5e-9b5c-43df-adaf-f95cf99e0685",
+      example: "9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2",
+    },
+  ],
+  responses: {
+    200: {
+      description: "OK",
+
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+          },
+        },
+      },
+    },
+    500: {
+      description: "Something Went wrong!!!",
+    },
+  },
+};
+
+const deleteRoute = {
+  tags: ["Route"],
+  summary: "Delete Route",
+  description: "Delete one Route",
+  parameters: [
+    {
+      name: "uuid",
+      in: "path",
+      decription: "This is an ID of the Route",
+      type: "string",
+      example: "9c1c36ba-edf3-4d59-88e7-65ec62b3e0f2",
     },
   ],
   responses: {
@@ -101,41 +134,69 @@ const getUserByID = {
         "application/json": {
           schema: {
             type: "object",
-            example: {
-              status: "success",
-              data: {
-                user: {
-                  name: "Jean De Dieu UKWITEGETSE",
-                  email: "jeanndo@gmail.com",
-                  role: "admin",
-                  createdAt: "2022-04-19T12:57:15.221Z",
-                  updatedAt: "2022-04-19T12:57:15.221Z",
-                },
-              },
+          },
+        },
+      },
+    },
+    500: {
+      description: "Something Went wrong!!!",
+    },
+  },
+};
+
+const updateRoute = {
+  tags: ["Route"],
+  summary: "Update Route",
+  description: "Update Route",
+  parameters: [
+    {
+      name: "uuid",
+      in: "path",
+      required: true,
+      decription: "This is an ID of the Route",
+      type: "string",
+      example: "f3b7f03d-641b-4ebd-9296-5c942bb971b6",
+    },
+  ],
+  requestBody: {
+    name: "Patch",
+    in: "body",
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "Name of the Route",
+            },
+            routeCode: {
+              type: "string",
+              description: "Route code",
+            },
+            startLocation: {
+              type: "string",
+              decription: "Location",
+            },
+            endLocation: {
+              type: "string",
+              decription: "Destination",
+            },
+            distance: {
+              type: "string",
+              decription: "distance in km",
+            },
+            duration: {
+              type: "string",
+              description: "hours",
             },
           },
         },
       },
     },
-    404: {
-      description: "No user found with That ID",
-    },
   },
-}
 
-const deleteUser = {
-  tags: ["User"],
-  summary: "Delete a User By ID",
-  description: "Get a User By ID",
-  parameters: [
-    {
-      name: "uuid",
-      in: "path",
-      decription: "This is an ID of a User",
-      type: "string",
-      example: "c5697c5e-9b5c-43df-adaf-f95cf99e0685",
-    },
-  ],
   responses: {
     200: {
       description: "OK",
@@ -143,75 +204,25 @@ const deleteUser = {
         "application/json": {
           schema: {
             type: "object",
-            example: {
-              status: "success",
-              data: {
-                message: "User Delete Successully",
-              },
-            },
           },
         },
       },
     },
-    404: {
-      description: "No user found with That ID",
+    500: {
+      description: "Something Went wrong!!!",
     },
   },
-}
+};
+const routeRouteDoc = {
+  "/api/v1/routes": {
+    get: allRoute,
+    post: createRoute,
+  },
+  "/api/v1/routes/{uuid}": {
+    get: getRouteByID,
+    delete: deleteRoute,
+    patch: updateRoute,
+  },
+};
 
-const updateUser = {
-  tags: ["User"],
-  summary: "Update a User By ID",
-  description: "Get a User By ID",
-  parameters: [
-    {
-      name: "uuid",
-      in: "path",
-      decription: "This is an ID of a User",
-      type: "string",
-      example: "c5697c5e-9b5c-43df-adaf-f95cf99e0685",
-    },
-  ],
-  responses: {
-    200: {
-      description: "OK",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            example: {
-              status: "success",
-              data: {
-                status: "success",
-                message: "User Updated Successully",
-                data: {
-                  user: {
-                    name: "Jean De Dieu",
-                    email: "example@gmail.com",
-                    role: "user",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    404: {
-      description: "No user found with That ID",
-    },
-  },
-}
-const userRouteDoc = {
-  "/users": {
-    get: allUsers,
-    post: createUser,
-  },
-  "/users/{uuid}": {
-    get: getUserByID,
-    delete: deleteUser,
-    patch: updateUser,
-  },
-}
-
-module.exports = userRouteDoc
+module.exports = routeRouteDoc;

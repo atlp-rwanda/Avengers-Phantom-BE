@@ -47,16 +47,9 @@ const createBus = async (req, res) => {
 
 const getAllBuses = async (req, res) => {
   try {
-  
-  res.status(200).json({status:"success",
-  data:{
-    buses:res.paginatedResults
-  }
- 
-}) 
-
+    res.status(200).json(res.paginatedResults);
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       status: "fail",
       message: "Something Went Very Wrong 👎🏿",
       err: error.stack,

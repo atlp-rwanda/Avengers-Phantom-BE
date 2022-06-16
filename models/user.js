@@ -1,40 +1,48 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-
-    static associate({Bus}) {
-      this.hasOne(Bus,{foreignKey:"userId",as:"bus"})
+    static associate({ Bus, Role }) {
+      this.hasOne(Bus, { foreignKey: "userId", as: "bus" });
+      this.belongsTo(Role, { foreignKey: "roleId", as: "role" });
     }
 
     toJSON() {
       return {
         ...this.get(),
         id: undefined,
-        passwordResetToken:undefined,
-        updatedAt:undefined,
-        createdAt:undefined,
-        isAssigned:undefined,
-        password:undefined,
+        passwordResetToken: undefined,
+        updatedAt: undefined,
+        createdAt: undefined,
+        isAssigned: undefined,
+        password: undefined,
         bus: undefined,
       };
     }
   }
-  User.init({
-    uuid: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
-    },
-    name: 
+  User.init(
+    { 
+uuid: {
+  type: DataTypes.UUID,
+  defaultValue: DataTypes.UUIDV4,
+},
+name: {
+  type: DataTypes.STRING,
+  allowNull: false,
+  validate: {
+    notNull: { msg: "Driver or Operator must have a Role" },
+    notEmpty: { msg: "Role must not be empty" },
+  },
+},
+    profilePicture: 
     {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: 'Driver or Operator must have a Role' },
-        notEmpty: { msg: 'Role must not be empty' }
-      }
+        notNull: { msg: 'Driver or Operator must have an profile picture' },
+        notEmpty: { msg: 'Driver or Operator profile picture must not be empty' }
+      }, 
+      default: "https://res.cloudinary.com/avengersimages/image/upload/v1655617940/phantomImages/default-avatar_zkiotb.png"
     },
     gender: {
       type: DataTypes.STRING,
@@ -126,16 +134,16 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.BOOLEAN,
       defaultValue:false
     },
-    passwordResetToken:{
-      type:DataTypes.STRING,
-      defaultValue:""
+      passwordResetToken: {
+        type: DataTypes.STRING,
+        defaultValue: "",
+      },
+    },
+    {
+      sequelize,
+      tableName: "users",
+      modelName: "User",
     }
-  }, {
-    sequelize,
-    tableName:'users',
-    modelName: 'User',
-  });
+  );
   return User;
-};
-
-
+}

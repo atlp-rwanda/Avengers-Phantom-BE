@@ -1,5 +1,5 @@
 // @ts-nocheck
-const { User } = require("./../../models");
+const { User, Role } = require("./../../models");
 const jwt = require("jsonwebtoken");
 const PassGenerator = require("generate-password");
 const sendEmail = require("../utils/Email");
@@ -20,8 +20,13 @@ const resetToken = (uuid) => {
 
 const register = async (req, res) => {
   try {
+    console.log("Hello123");
+
+    const roleId = req.params.roleId;
+
     const {
       name,
+      profilePicture,
       idNumber,
       gender,
       district,
@@ -33,7 +38,6 @@ const register = async (req, res) => {
       permitId,
       telNumber,
       vehicletype,
-      role,
     } = req.body;
 
     const password = PassGenerator.generate({
@@ -49,12 +53,30 @@ const register = async (req, res) => {
 
     if (user) {
       return res.status(403).json({
-        message: "User Already Exist Please use a different account",
+        message: req.t("existing user message"),
       });
     }
 
+    const role = await Role.findOne({ where: { uuid: roleId } });
+
+    if (!role) {
+      return res.status(403).json({
+        message: "Role does not exist",
+      });
+    }
+
+    const role = await Role.findOne({ where: { uuid: roleId } });
+
+    if (!role) {
+      return res.status(403).json({
+        message: "Role does not exist",
+      });
+    }
+    console.log(role);
+
     const newUser = await User.create({
       name,
+      profilePicture,
       idNumber,
       gender,
       district,
@@ -67,11 +89,12 @@ const register = async (req, res) => {
       permitId,
       telNumber,
       vehicletype,
-      role,
+      roleId: role.id,
+      roleName: role.roleName,
       password: hashedPass,
     });
 
-    const URL = `https://www.phantomavengers.rw`;
+    const URL = `https://avengers-phantom-test.herokuapp.com/`;
     const message = `
     Dear ${newUser.name},
     Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
@@ -84,7 +107,7 @@ const register = async (req, res) => {
 
     res.status(201).json({
       status: "success",
-      password: password,
+      // password: password,
       message: "Email Sent successfully 👍🏾",
       data: {
         user: newUser,
@@ -92,11 +115,10 @@ const register = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "Something went wrong try Again!!",
+      status: req.t("fail status"),
+      message: req.t("try aaagain message"),
       error: error,
     });
-    console.error(error);
   }
 };
 
@@ -105,7 +127,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({
-        message: "Please Provide email and password",
+        message: req.t("provide email & password"),
       });
     }
 
@@ -113,24 +135,26 @@ const login = async (req, res) => {
     console.log(await bcrypt.compare(password, user.password));
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({
-        message: "Invalid Email or Password",
+        message: req.t("invalid credentials"),
       });
     }
 
     const token = signToken(user.uuid);
     res.status(200).json({
-      status: "success",
-      message: `${user.name} successfully Logged in!!`,
+      status: req.t("success status"),
+      message: `${user.name} ${req.t("login success")}`,
       token,
       data: {
         user,
       },
     });
-  } catch (error) {
+  }} catch (error) {
     res.status(401).json({
-      status: "fail",
-      message: "Unauthorized User Please try again",
+      status: req.t("fail status"),
+      message: req.t("login error"),
       err: error.stack,
       errorMessage: error,
     });
@@ -156,11 +180,9 @@ const forgotPassword = async (req, res) => {
     await user.save();
 
     //3)Send it to user's email
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${Token}`;
+    const resetURL = `http://localhost:${process.env.PORT}/resertpasswordpage/${Token}`;
 
-    const message = `Forgot your password! please submit a PATCH request with your new password and confirmPassword to:${resetURL}.\n If you didn't forget your password please ignore this email.`;
+    const message = `Forgot your password! please click here:${resetURL}. to reset your password.\n If you didn't forget your password please ignore this email.`;
 
     //3) send email
 
@@ -172,6 +194,7 @@ const forgotPassword = async (req, res) => {
     res.status(200).json({
       status: "sucess",
       message: "Token sent to email",
+      token:Token
     });
   } catch (error) {
     res.status(500).json({
@@ -245,52 +268,53 @@ const resetPassword = async (req, res) => {
       message: "Your password has been updated successfully 👍🏾",
     });
   } catch (error) {
-    res.status(401).json({
+    res.status(500).json({
       message: "Something Went very wrong",
       err: error,
     });
   }
 };
 
-const changePassword = async(req, res) => {
+const changePassword = async (req, res) => {
+  //1.Get token for logged in
 
-  //1.Get token for logged in 
-  
-  const token = req.headers.authorization.split(' ')[1];
-  //2.Check token
-
-  if(!token){
-    return res.status(403).json({message: "you have to be logged in first"})
-  }
+  const token = req.headers.authorization.split(" ")[1];
 
   //3.get user from token by uuid
 
   const decoded = jwt.verify(token, process.env.JWT_SECRETE);
-  const uuid = decoded.uuid
+  const uuid = decoded.uuid;
   const user = await User.findOne({
     where: { uuid: uuid },
-  })
-
+  });
   //4.get password from reques body
-  const {oldpassword, newpassword1, newpassword2 } = req.body;
+  const { oldpassword, newpassword1, newpassword2 } = req.body;
 
   //5. Check passwords
   const password = await bcrypt.compare(oldpassword, user.password);
-  if(!password){
-    return res.status(400).json({message: "The old password is wrong, correct it and try again"})
+  if (!password) {
+    return res
+      .status(401)
+      .json({ message: "The old password is wrong, correct it and try again" });
   }
-  if (newpassword1 !== newpassword2){
-    return res.json({message: "new password does not match"})
+  if (newpassword1 !== newpassword2) {
+    return res.status(401).json({ message: "new password does not match" });
   }
 
   //6.hash password
   const hashedPass = await bcrypt.hash(newpassword1, 12);
 
   //update pass
-  user.password = hashedPass
-  await user.save()
- 
-  res.json({message: "your password is updated successfully"})
-}
+  user.password = hashedPass;
+  await user.save();
 
-module.exports = { register, login, forgotPassword, resetPassword , changePassword};
+  res.status(200).json({ message: "your password is updated successfully" });
+};
+
+module.exports = {
+  register,
+  login,
+  forgotPassword,
+  resetPassword,
+  changePassword,
+};

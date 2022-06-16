@@ -1,23 +1,23 @@
 // @ts-nocheck
 
-const { User } = require("../../../models");
+const { User } = require("../../../models"); 
+const { cloudinary } = require("../../utils/cloudinary");
+
 const getAllUsers = async (req, res) => {
   try {
-    
     const users = await User.findAndCountAll();
 
-    res.status(201).json({
-      status: "success",
+    res.status(200).json({
+      status: req.t('success status'),
       result: users.length,
       data: {
         users: users,
       },
-       
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "Something went wrong!!",
+      status: req.t("fail status"),
+      message: req.t("try again message"),
       err: error.stack,
     });
   }
@@ -28,9 +28,10 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findOne({
       where: { uuid },
+      include: ["role"],
     });
     res.status(200).json({
-      status: "success",
+      status: req.t("success message"),
       data: {
         user,
       },
@@ -43,34 +44,50 @@ const getUser = async (req, res) => {
   }
 };
 
-const updateRole = async (req, res) => {
+const changeRole = async (req, res) => {
   const uuid = req.params.uuid;
-  const { role } = req.body;
+  const { roleName } = req.body;
+  console.log("role", roleName);
   try {
     const user = await User.findOne({ where: { uuid } });
 
-    user.role = role;
+    user.roleName = roleName;
     await user.save();
 
-    res.status(200).json({
-      status: "success",
-      message: "User's role Updated Successfully",
-      data: {
-        user,
-      },
-    });
-  } catch (error) {
+  if(!role){
     res.status(404).json({
-      message: "No user with that ID",
-      Error: error.stack,
+      message: req.t("Role does not exists"),
     });
+  }
+  else{
+    try {
+      const user = await User.findOne({ where: { uuid } });
+      user.roleName = role.roleName;
+      user.roleId = role.id;
+
+      await user.save();
+
+      res.status(200).json({
+        status: req.t("success status"),
+        message: req.t("user role updated message"),
+        data: {
+          user,
+        },
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: req.t("user wrong ID"),
+        Error: error.stack,
+      });
+    }
   }
 };
 
 const updateUser = async (req, res) => {
   const uuid = req.params.uuid;
   const {
-    name,
+    name, 
+    profilePicture,
     idNumber,
     district,
     sector,
@@ -87,6 +104,7 @@ const updateUser = async (req, res) => {
     const user = await User.findOne({ where: { uuid } });
 
     user.name = name;
+    user.profilePicture  = profilePicture;
     user.idNumber = idNumber;
     user.district = district;
     user.sector = sector;
@@ -101,15 +119,15 @@ const updateUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      status: "success",
-      message: "User Updated Successully",
+      status: req.t("success status"),
+      message: req.t("user update message"),
       data: {
         user,
       },
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
+      message: req.t("user wrong ID"),
       Error: error.stack,
     });
   }
@@ -120,12 +138,13 @@ const updateProfile = async (req, res) => {
     const { uuid } = req.params;
     const user = await User.findOne({ where: { uuid } });
     if (!user) {
-      return errorRes(res, 404, 'User Not Found');
+      return res.status(404).json({message: "User Not Found"});
     }
-    const userId = req.user.dataValues.uuid; 
+    const userId = req.user.dataValues.uuid;
     if (userId === uuid) {
       const { 
     name,
+    profilePicture,
     idNumber,
     district,
     sector,
@@ -141,6 +160,7 @@ const updateProfile = async (req, res) => {
       const updatedUser = await User.update(
         {
     name,
+    profilePicture,
     idNumber,
     district,
     sector,
@@ -157,17 +177,29 @@ const updateProfile = async (req, res) => {
       );
       const updatedResponse = updatedUser[1].dataValues;
 
+    // send profile picture to cloudinary servers
+      const imageFile = req.body.profilePicture;
+      console.log("Image file: " + imageFile);
+      const uploadImageResponse = await cloudinary.uploader.upload(imageFile, {
+        upload_preset: 'phantomImages'
+      });
+      console.log("Upload image response " + uploadImageResponse);
+
       return res.status(200).json({
-        message: 'User Updated',
-        data: updatedResponse
+        message: "User Updated",
+        data: updatedResponse,
       });
     }
-    return res.status(403).json({ message: 'You can only update your profile'});
+    return res
+      .status(403)
+      .json({ message: "You can only update your profile" });
   } catch (error) {
-    return res.status(500).json({ message: 'There was an error while updating', error: error.stack});
+    return res.status(500).json({
+      message: "There was an error while updating",
+      error: error.stack,
+    });
   }
 };
-
 
 const deleteUser = async (req, res) => {
   const uuid = req.params.uuid;
@@ -184,10 +216,17 @@ const deleteUser = async (req, res) => {
     });
   } catch (error) {
     res.status(404).json({
-      message: "No user with that ID",
+      message: req.t("user wrong ID"),
       Error: error.stack,
     });
   }
 };
 
-module.exports = { getAllUsers, getUser, updateUser, updateProfile,updateRole, deleteUser };
+module.exports = {
+  getAllUsers,
+  getUser,
+  updateUser,
+  updateProfile,
+  changeRole,
+  deleteUser,
+};

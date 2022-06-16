@@ -1,0 +1,28 @@
+{
+    "welcome message": "Murakaza neza ku rubuga ruborohereza ingendo!!!",
+    "success status": "Success",
+    "fail status": "fail",
+    "existing user message": "email mwashyizemo yarakoreshejwe, mugerageze indi",
+    "email sent": "email yoherejwe 👍🏾",
+    "try again message": "serivisi musabye ntago ibashije kuboneka, mwongere mugerageze mukanya",
+    "provide email & password":"Injiza email n'ijambobanga.",
+    "invalid credentials": "Imeyiri cyangwa ijambobanga wanditse nta konti bihuye na yo. genzura konti yawe maze winjiremo.",
+    "login success": "winjiye muri konti yawe",
+    "login error": "ikibazo cya system, mwongere mugerageze mukanya",
+    "successful creation": "konti yafunguwe",
+    "bus wrong ID": "Nta bisi ihuye niyo code, genzura code wongere ugerageze",
+    "bus update success":"amakuru kuri bisi yahinduwe",
+    "bus delete success": "bisi yasibwe",
+    "middleware protect message": "injira muri konti yawe,wemererwe gukora iki gikorwa",
+    "middleware not fresh user": "konti ntibashije kuboneka, genzura konti wongere ugerageze",
+    "middleware restrict message": "ntago iyi konti yemerewe gukora iki gikorwa",
+    "role created message": "role nshya yahanzwe 👍🏾",
+    "role wrong id": "nta role ihuye niyi code, genzura code wongere ugerageze",
+    "role update message": "amakuru kuri role yahinduwe",
+    "role deleted message": "role yasibwe",
+    "user wrong ID":"nta konti ihuye niyi code, genzura code wongere ugerageze",
+    "user role updated message":"role kuri konti yahinduwe 👍🏾",
+    "user update message": "amakuru kuri konti yahinduwe",
+    "user deleted message":"konti yasibwe"
+
+}

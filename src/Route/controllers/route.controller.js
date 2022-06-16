@@ -161,7 +161,7 @@ const deleteRoute = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: "Error while updating a route",
+      message: "Error while deleting route",
       err: error.stack,
     });
   }
