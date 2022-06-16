@@ -3,6 +3,8 @@ const roleRouteDoc = require("./../Roles/roles.docs");
 const loginRouteDoc = require("./../Authentication/Login.docs");
 const busRouteDoc = require("./../Buses/docs/bus.docs");
 const routeRouteDoc = require("./../Route/route.docs");
+const AssignDriverToBusDoc = require("./../Assignment/DriverToBus/DriverToBus.docs");
+const AssignBusToRouteDoc = require("./../Assignment/BusToRoutes/BusToRoute.docs");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./config.env" });
@@ -66,6 +68,12 @@ const swaggerDoc = {
     {
       name: "Route",
       description: "Buses routes",
+      name: "Assign driver",
+      description: "Assingning driver to buses",
+    },
+    {
+      name: "Assign buses",
+      description: "assigning bus to route",
     },
   ],
 
@@ -75,6 +83,8 @@ const swaggerDoc = {
     ...roleRouteDoc,
     ...busRouteDoc,
     ...routeRouteDoc,
+    ...AssignDriverToBusDoc,
+    ...AssignBusToRouteDoc,
   },
 };
 module.exports = swaggerDoc;
