@@ -1,11 +1,11 @@
 // @ts-nocheck
-const { User } = require("../../../models");
+const { User,Role } = require("../../../models");
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAndCountAll();
 
-    res.status(201).json({
-      status: req.t("success status"),
+    res.status(200).json({
+      status: req.t('success status'),
       result: users.length,
       data: {
         users: users,
@@ -41,30 +41,40 @@ const getUser = async (req, res) => {
   }
 };
 
-const updateRole = async (req, res) => {
+const changeRole = async (req, res) => {
   const uuid = req.params.uuid;
-  try {
-    const { roleName } = req.body;
-    console.log("role", roleName);
-    const user = await User.findOne({ where: { uuid } });
+  const { roleName } = req.body;
+  const role = await Role.findOne({where: {roleName}})
 
-    user.roleName = roleName;
-    await user.save();
-
-    res.status(200).json({
-      status: req.t("success status"),
-      message: req.t("user role updated message"),
-      data: {
-        user,
-      },
-    });
-  } catch (error) {
+  if(!role){
     res.status(404).json({
-      message: req.t("user wrong ID"),
-      Error: error.stack,
+      message: req.t("Role does not exists"),
     });
   }
+  else{
+    try {
+      const user = await User.findOne({ where: { uuid } });
+      user.roleName = role.roleName;
+      user.roleId = role.id;
+
+      await user.save();
+
+      res.status(200).json({
+        status: req.t("success status"),
+        message: req.t("user role updated message"),
+        data: {
+          user,
+        },
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: req.t("user wrong ID"),
+        Error: error.stack,
+      });
+    }
+  }
 };
+
 const updateUser = async (req, res) => {
   const uuid = req.params.uuid;
   const {
@@ -118,7 +128,7 @@ const updateProfile = async (req, res) => {
     const { uuid } = req.params;
     const user = await User.findOne({ where: { uuid } });
     if (!user) {
-      return errorRes(res, 404, "User Not Found");
+      return res.status(404).json({message: "User Not Found"});
     }
     const userId = req.user.dataValues.uuid;
     if (userId === uuid) {
@@ -197,6 +207,6 @@ module.exports = {
   getUser,
   updateUser,
   updateProfile,
-  updateRole,
+  changeRole,
   deleteUser,
 };

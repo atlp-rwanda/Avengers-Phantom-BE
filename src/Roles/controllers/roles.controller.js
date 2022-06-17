@@ -38,7 +38,6 @@ const createRole = async (req, res) => {
       message: req.t("try again message"),
       err: error,
     });
-    console.error(error);
   }
 };
 
@@ -46,8 +45,8 @@ const getAllRoles = async (req, res) => {
   try {
     const roles = await Role.findAndCountAll();
 
-    res.status(201).json({
-      status: req.t("success status"),
+    res.status(200).json({
+      status: req.t('success status'),
       result: roles.length,
       data: {
         roles,
@@ -71,13 +70,6 @@ const getRole = async (req, res) => {
       where: { uuid },
       include: ["user"],
     });
-    if (!role) {
-      return res.status(404).json({
-        status: "fail",
-        message: "No role Name found with that ID",
-      });
-    }
-
     res.status(200).json({
       status: req.t("success status"),
       data: {
@@ -98,14 +90,6 @@ const updateRole = async (req, res) => {
     const { roleName } = req.body;
 
     const role = await Role.findOne({ where: { uuid } });
-
-    if (!role) {
-      return res.status(404).json({
-        status: "fail",
-        message: "No role Name found with that ID",
-      });
-    }
-
     role.roleName = roleName;
 
     await role.save();
@@ -132,14 +116,6 @@ const deleteRole = async (req, res) => {
     const role = await Role.findOne({
       where: { uuid },
     });
-
-    if (!role) {
-      return res.status(404).json({
-        status: "fail",
-        message: "No role Name found with that ID",
-      });
-    }
-
     await role.destroy();
 
     res.status(200).json({

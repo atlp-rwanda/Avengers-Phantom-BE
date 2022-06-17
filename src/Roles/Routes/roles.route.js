@@ -12,7 +12,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").post(createRole).get(getAllRoles);
-router.route("/:uuid").get(getRole).patch(updateRole).delete(deleteRole);
+router.route("/").post(protect, restrictTo("administrator"),createRole).get(getAllRoles);
+router.route("/:uuid").get(getRole).patch(protect, restrictTo("administrator"),updateRole).delete(protect, restrictTo("administrator"),deleteRole);
 
 module.exports = router;
