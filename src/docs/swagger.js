@@ -20,16 +20,10 @@ const swaggerDoc = {
     {
       url: `http://localhost:${process.env.PORT}`,
       description: "Local dev Server",
-
-      url: "http://localhost:8000",
-      description: "Local dev Server",
-
-      url: "http://localhost:9000",
-      description: "Local dev Server",
     },
     {
-      url: "http://www.avengersphantom.com",
-      description: "production dev server",
+      url: "https://new-avengers-be-deploy.herokuapp.com/",
+      description: "Production dev server",
     },
   ],
   components: {
@@ -68,6 +62,8 @@ const swaggerDoc = {
     {
       name: "Route",
       description: "Buses routes",
+    },
+    {
       name: "Assign driver",
       description: "Assingning driver to buses",
     },
