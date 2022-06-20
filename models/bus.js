@@ -3,8 +3,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Bus extends Model {
     
-    static associate({ User }) {
+    static associate({ User, Passenger }) {
       this.belongsTo(User, { foreignKey: "userId",as:"user" });
+      this.hasMany(Passenger, { foreignKey: "busId", as: "members"});
+
     }
     toJSON() {
       return {
@@ -78,6 +80,11 @@ module.exports = (sequelize, DataTypes) => {
       isAssigned: {
         type: DataTypes.BOOLEAN,
         defaultValue:false
+      },
+      passengers: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
       }
     },
     {

@@ -45,6 +45,11 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue:false
       },
+      passengers: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

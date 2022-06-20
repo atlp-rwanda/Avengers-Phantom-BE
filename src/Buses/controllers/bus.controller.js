@@ -61,7 +61,7 @@ const getBus = async (req, res) => {
   try {
     const uuid = req.params.uuid;
 
-    const bus = await Bus.findOne({ where: { uuid } });
+    const bus = await Bus.findOne({ where: { uuid } , include: ["members"]});
     res.status(200).json({
       status: "success",
       data: {

@@ -12,7 +12,7 @@ const createRole = async (req, res) => {
       });
     }
 
-    const role = await Role.findOne({ where: { roleName } });
+   const  role = await Role.findOne({ where: { roleName } });
 
     if (role) {
       return res.status(403).json({
