@@ -90,7 +90,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-      }
+      },
     });
   },
   async down(queryInterface, DataTypes) {
