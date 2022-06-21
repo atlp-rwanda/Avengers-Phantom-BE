@@ -4,7 +4,7 @@
   "description": "Avengers phantom Backend Project Setup",
   "main": "app.js",
   "scripts": {
-    "test": "nyc mocha src/docs/test src/**/*.test.js --timeout 30000",
+    "test": "nyc mocha  -R spec src/docs/test src/**/*.test.js --timeout 30000",
     "coverage": "nyc npm run test",
     "prestart": "npm run migrate && npm run seed",
     "start": "node server.js",

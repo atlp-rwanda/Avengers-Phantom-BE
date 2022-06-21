@@ -5,6 +5,7 @@ const busRouteDoc = require("./../Buses/docs/bus.docs");
 const routeRouteDoc = require("./../Route/route.docs");
 const AssignDriverToBusDoc = require("./../Assignment/DriverToBus/DriverToBus.docs");
 const AssignBusToRouteDoc = require("./../Assignment/BusToRoutes/BusToRoute.docs");
+const asignRouteDoc = require("./../Assignment/DriverToBus/asign.docs");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./config.env" });
@@ -81,6 +82,7 @@ const swaggerDoc = {
     ...routeRouteDoc,
     ...AssignDriverToBusDoc,
     ...AssignBusToRouteDoc,
+    ...asignRouteDoc,
   },
 };
 module.exports = swaggerDoc;

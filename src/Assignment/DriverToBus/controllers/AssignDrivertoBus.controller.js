@@ -5,7 +5,6 @@ const AssignDriverToBus = async (req, res) => {
   try {
     const driverId = req.params.driverId;
     const busId = req.params.busId;
-
     const user = await User.findOne({ where: { uuid: driverId } });
 
     if (!user) {
@@ -23,10 +22,11 @@ const AssignDriverToBus = async (req, res) => {
         status: "fail",
         message: "Driver is already assigned to a Bus",
       });
-    } else {
-      user.isAssigned = true;
-      await user.save();
-    }
+    } 
+    // else {
+    //   user.isAssigned = true;
+    //   await user.save();
+    // }
 
     const bus = await Bus.findOne({ where: { uuid: busId } });
 
@@ -41,6 +41,8 @@ const AssignDriverToBus = async (req, res) => {
         message: `This Bus is already assigned to someone`,
       });
     } else {
+      user.isAssigned = true;
+      await user.save();
       bus.userId = user.id;
       bus.isAssigned = true;
       await bus.save();
@@ -78,7 +80,7 @@ const unAssignDriverToBus = async (req, res) => {
     const user = await User.findOne({ where: { uuid: driverId } });
 
     if (!user) {
-      return res.status(404).josn({
+      return res.status(404).json({
         status: "fail",
         message: "No Driver found with that ID",
       });
@@ -92,10 +94,11 @@ const unAssignDriverToBus = async (req, res) => {
         status: "fail",
         message: "The user is not assigned to any bus, Please try again",
       });
-    } else {
-      user.isAssigned = false;
-      await user.save();
-    }
+    } 
+    // else {
+    //   user.isAssigned = false;
+    //   await user.save();
+    // }
 
     const bus = await Bus.findOne({ where: { uuid: busId } });
 
@@ -110,6 +113,8 @@ const unAssignDriverToBus = async (req, res) => {
         message: "This Bus is not assigned to any one",
       });
     } else {
+      user.isAssigned = false;
+      await user.save();
       bus.userId = null;
       bus.isAssigned = false;
       await bus.save();

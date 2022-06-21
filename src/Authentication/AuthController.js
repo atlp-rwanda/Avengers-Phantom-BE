@@ -65,15 +65,6 @@ const register = async (req, res) => {
       });
     }
 
-    // const role = await Role.findOne({ where: { uuid: roleId } });
-
-    // if (!role) {
-    //   return res.status(403).json({
-    //     message: "Role does not exist",
-    //   });
-    // }
-    console.log(role);
-
     const newUser = await User.create({
       name,
       idNumber,
@@ -98,6 +89,10 @@ const register = async (req, res) => {
     Dear ${newUser.name},
     Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
     `;
+    console.log(`
+    Dear ${newUser.name},
+    Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
+    `)
     await sendEmail({
       email: newUser.email,
       subject: "Congratulations, welcome to Phantom.",
@@ -131,9 +126,10 @@ const login = async (req, res) => {
     }
 
     const user = await User.findOne({ where: { email } });
-    console.log(password, user.password);
-
+     console.log(password, user.password)
+  
     if (!user || !(await bcrypt.compare(password, user.password))) {
+
       return res.status(401).json({
         message: req.t("invalid credentials"),
       });
@@ -201,6 +197,7 @@ const forgotPassword = async (req, res) => {
     });
   }
 };
+
 
 const resetPassword = async (req, res) => {
   try {
