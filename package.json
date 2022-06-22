@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nyc mocha src/docs/test src/**/*.test.js --timeout 30000",
     "coverage": "nyc npm run test",
-    "prestart": "npm run migrate && npm run seed",
+    "prestart": "npm run migrate && npm run seed:undo:all && npm run seed",
     "start": "node server.js",
     "start:dev": "nodemon --exec babel-node -r dotenv/config server.js",
     "migrate": "npx sequelize-cli db:migrate",
