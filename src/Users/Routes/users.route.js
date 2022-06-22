@@ -13,6 +13,9 @@ const {
   updateProfile,
   deleteUser,
   changeRole,
+  allNotifications,
+  readNotification,
+  deleteNotification
 } = require("./../controllers/user.controller");
 
 const { protect, restrictTo} = require("./../../Middlewares/Middlewares");
@@ -25,15 +28,19 @@ router.post("/login", login);
 router.put("/forgotpassword", forgotPassword);
 router.put("/resetpassword/:token", resetPassword);
 router.patch("/changepassword", protect, changePassword);
+router.get("/notifications",protect,allNotifications)
 
 router.route("/").get(protect, restrictTo("administrator"), getAllUsers);
 router
   .route("/:uuid")
   .get(protect, getUser)
   .patch(protect, restrictTo("administrator"), updateUser)
-  .put(protect, restrictTo("administrator"), changeRole)
   .delete(protect, restrictTo("administrator"), deleteUser);
 router.patch("/updateProfile/:uuid", protect,  parser.array('user_image'), updateProfile);
 
+router.patch("/:uuid/changerole",protect,restrictTo("administrator"),changeRole)
+router.route("/notifications/:uuid")
+.get(protect,readNotification)
+.delete(protect,deleteNotification)
 
 module.exports = router;
