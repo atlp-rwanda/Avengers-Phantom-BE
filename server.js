@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 const { sequelize } = require("./models");
 
-dotenv.config({path:'./config.env'})
+dotenv.config({path:'./.env'})
 
 const PORT = process.env.PORT || 5000;
 

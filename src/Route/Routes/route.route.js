@@ -1,6 +1,6 @@
 const express = require("express");
 const {Route} = require('./../../../models')
-const {routePagination} = require('./../../Middlewares/Middlewares')
+const {protect,restrictTo,routePagination} = require('./../../Middlewares/Middlewares')
 const {
   createRoute,
   getAllRoutes,
@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").post(createRoute).get(routePagination(Route),getAllRoutes);
-router.route("/:uuid").get(getRoute).patch(updateRoute).delete(deleteRoute);
+router.route("/").post(protect, restrictTo("operator","administrator"),createRoute).get(routePagination(Route),getAllRoutes);
+router.route("/:uuid").get(getRoute).patch(protect, restrictTo("operator","administrator"),updateRoute).delete(protect, restrictTo("operator","administrator"),deleteRoute);
 
 module.exports = router;

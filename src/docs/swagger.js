@@ -7,7 +7,7 @@ const AssignDriverToBusDoc = require("./../Assignment/DriverToBus/DriverToBus.do
 const AssignBusToRouteDoc = require("./../Assignment/BusToRoutes/BusToRoute.docs");
 const dotenv = require("dotenv");
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 const swaggerDoc = {
   openapi: "3.0.0",

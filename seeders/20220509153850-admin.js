@@ -20,6 +20,21 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        uuid: "8e3d2a6c-5484-4d86-8eb0-40098cd7a530",
+        name: "avengers",
+        gender: "male",
+        idNumber: 123456789,
+        district: "Nyarugenge",
+        sector: "Nyarugenge",
+        cell: "Nyarugenge",
+        email: "avengersphantom70@gmail.com",
+        password: await bcrypt.hash("operator123", 12),
+        telNumber: 784860836,
+        roleName: "operator",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 
