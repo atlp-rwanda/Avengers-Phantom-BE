@@ -12,14 +12,14 @@ const {
   updateUser,
   updateProfile,
   deleteUser,
-  updateRole,
+  changeRole,
 } = require("./../controllers/user.controller");
 
 const { protect, restrictTo } = require("./../../Middlewares/Middlewares");
 
 const router = express.Router();
 
-router.post("/register/:roleId", register);
+router.post("/register/:roleId", protect, restrictTo("administrator"), register);
 router.post("/login", login);
 router.put("/forgotpassword", forgotPassword);
 router.put("/resetpassword/:token", resetPassword);
@@ -30,7 +30,7 @@ router
   .route("/:uuid")
   .get(protect, getUser)
   .patch(protect, restrictTo("administrator"), updateUser)
-  .put(protect, restrictTo("administrator"), updateRole)
+  .put(protect, restrictTo("administrator"), changeRole)
   .delete(protect, restrictTo("administrator"), deleteUser);
 router.patch("/updateProfile/:uuid", protect, updateProfile);
 

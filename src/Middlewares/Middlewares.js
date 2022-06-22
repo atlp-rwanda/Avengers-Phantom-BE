@@ -49,7 +49,6 @@ const protect = async (req, res, next) => {
       message: req.t('try again message'),
       err: error.message,
     });
-    console.log(error);
   }
 };
 

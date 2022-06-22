@@ -6,6 +6,9 @@ const sendEmail = require("../utils/Email");
 const bcrypt = require("bcryptjs");
 const { promisify } = require("util");
 const { generateToken } = require("./../utils/GenerateToken");
+const dotenv = require("dotenv");
+
+dotenv.config({ path: "./.env" });
 
 const signToken = (uuid) => {
   return jwt.sign({ uuid }, process.env.JWT_SECRETE, {
@@ -65,15 +68,6 @@ const register = async (req, res) => {
       });
     }
 
-    // const role = await Role.findOne({ where: { uuid: roleId } });
-
-    // if (!role) {
-    //   return res.status(403).json({
-    //     message: "Role does not exist",
-    //   });
-    // }
-    console.log(role);
-
     const newUser = await User.create({
       name,
       idNumber,
@@ -117,7 +111,6 @@ const register = async (req, res) => {
       message: req.t("try aaagain message"),
       error: error,
     });
-    console.error(error);
   }
 };
 
@@ -178,7 +171,7 @@ const forgotPassword = async (req, res) => {
     await user.save();
 
     //3)Send it to user's email
-    const resetURL = `http://localhost:8080/resertpasswordpage/${Token}`;
+    const resetURL = `http://localhost:${process.env.PORT}/resertpasswordpage/${Token}`;
 
     const message = `Forgot your password! please click here:${resetURL}. to reset your password.\n If you didn't forget your password please ignore this email.`;
 
@@ -192,6 +185,7 @@ const forgotPassword = async (req, res) => {
     res.status(200).json({
       status: "sucess",
       message: "Token sent to email",
+      token:Token
     });
   } catch (error) {
     res.status(500).json({
@@ -262,11 +256,6 @@ const changePassword = async (req, res) => {
   //1.Get token for logged in
 
   const token = req.headers.authorization.split(" ")[1];
-  //2.Check token
-
-  if (!token) {
-    return res.status(403).json({ message: "you have to be logged in first" });
-  }
 
   //3.get user from token by uuid
 
@@ -275,7 +264,6 @@ const changePassword = async (req, res) => {
   const user = await User.findOne({
     where: { uuid: uuid },
   });
-
   //4.get password from reques body
   const { oldpassword, newpassword1, newpassword2 } = req.body;
 
@@ -283,11 +271,11 @@ const changePassword = async (req, res) => {
   const password = await bcrypt.compare(oldpassword, user.password);
   if (!password) {
     return res
-      .status(400)
+      .status(401)
       .json({ message: "The old password is wrong, correct it and try again" });
   }
   if (newpassword1 !== newpassword2) {
-    return res.json({ message: "new password does not match" });
+    return res.status(401).json({ message: "new password does not match" });
   }
 
   //6.hash password
@@ -297,7 +285,7 @@ const changePassword = async (req, res) => {
   user.password = hashedPass;
   await user.save();
 
-  res.json({ message: "your password is updated successfully" });
+  res.status(200).json({ message: "your password is updated successfully" });
 };
 
 module.exports = {
