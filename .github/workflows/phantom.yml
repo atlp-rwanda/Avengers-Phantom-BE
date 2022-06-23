@@ -5,13 +5,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,27 +28,26 @@ jobs:
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
-        options:
-          --health-cmd pg_isready
+        options: --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install all dependencies
-      run: npm install
-    - run: npm run build --if-present
-    - name: Check linting errors
-      run: npm run lint
-    - name: run tests and generate coverage reports
-      run: npm run coverage 
-    - name: Sending coveralls report
-      uses: coverallsapp/github-action@master
-      with: 
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install all dependencies
+        run: npm install
+      - run: npm run build --if-present
+      - name: Check linting errors
+        run: npm run lint
+      - name: run tests and generate coverage reports
+        run: npm run coverage
+      - name: Sending coveralls report
+        uses: coverallsapp/github-action@master
+        with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-    - uses: ./.github/workflow/phantom.yml
+      - uses: ./.github/workflow/phantom.yml
