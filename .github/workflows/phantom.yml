@@ -61,6 +61,8 @@ jobs:
           fi
         env:
           DB_PASS: ${{secrets.DB_PASSWORD}}
+
+      - run: npm run build --if-present
       # - name: Create Database Phantom
       #   run: npm run create
       # - name: run tests and generate coverage reports
