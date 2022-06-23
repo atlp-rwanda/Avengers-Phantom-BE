@@ -1,53 +1,86 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
-
+name: Phantom backend CI
 on:
   push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
+    branches: [githubactions]
 
 jobs:
+  # Label of the runner job
   build:
+    # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    # Service containers to run with `runner-job`
     services:
+      # Label used to access the service container
       postgres:
-        image: postgres:latest
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
         env:
-          POSTGRES_DB: ${{ matrix.database-name }}
-          POSTGRES_USER: ${{ matrix.database-user }}
-          POSTGRES_PASSWORD: ${{ matrix.database-password }}
-        ports:
-          - 5432:5432
+          POSTGRES_PASSWORD: qwe123
         # Set health checks to wait until postgres has started
-        options: --health-cmd pg_isready
+        options: >-
+          --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - name: Install all dependencies
-        run: npm install
-      - run: npm run build --if-present
-      - name: Check linting errors
-        run: npm run lint
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      # Performs a clean installation of all dependencies in the `package.json` file
+      # For more information, see https://docs.npmjs.com/cli/ci.html
+      - name: Install dependencies
+        run: npm ci
+      - name: Create Database Phantom
+        run: npm run create
       - name: run tests and generate coverage reports
         run: npm run coverage
-      - name: Sending coveralls report
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/workflow/phantom.yml
+      # - name: Connect to PostgreSQL
+      #   #   # Runs a script that creates a PostgreSQL table, populates
+      #   #   # the table with data, and then retrieves the data
+      #   #   # run: node client.js
+      #   run: npm run start
+      - name: Stop connection
+        run: git config --local --get remote.origin.url
+        # Environment variables used by the `client.js` script to create
+        # a new PostgreSQL table.
+        env:
+          CI: true
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+          # DB_USER_NAME: ${{secrets.DB_USER_NAME}}
+          # DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          # DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          # DB_HOST: ${{secrets.DB_HOST}}
+          # PORT: ${{secrets.PORT}}
+          # JWT_SECRETE: ${{secrets.DB_USER_NAME}}
+          # JWT_EXPIRES_IN: ${{secrets.JWT_EXPIRES_IN}}
+          # RESET_PASSWORD_SECRETE: ${{secrets.RESET_PASSWORD_SECRETE}}
+          # RESET_LINK_EXPERES_IN: ${{secrets.RESET_LINK_EXPERES_IN}}
+          # EMAIL_SERVICE: ${{secrets.EMAIL_SERVICE}}
+          # EMAIL_USERNAME: ${{secrets.EMAIL_USERNAME}}
+          # EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+          # DATABASE_TEST_NAME: ${{secrets.DATABASE_TEST_NAME}}
+
+          # DB_USER_NAME: postgres
+          # DB_PASSWORD: qwe123
+          # DATABASE_NAME: phantom
+          # DB_HOST: 127.0.0.1
+          # PORT: 9000
+          # JWT_SECRETE: phantompoweredbyavengersever
+          # JWT_EXPIRES_IN: 1d
+          # RESET_PASSWORD_SECRETE: phantompoweredbyavengerseverresetpassowrd
+          # RESET_LINK_EXPERES_IN: 10m
+          # EMAIL_SERVICE: gmail
+          # EMAIL_USERNAME: avengersphantom7@gmail.com
+          # EMAIL_PASSWORD: kyisqowhuelbjxop
+          # NODE_ENV: test
+          # DATABASE_TEST_NAME: phantom_test
