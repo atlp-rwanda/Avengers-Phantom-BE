@@ -67,32 +67,32 @@ jobs:
       #   run: npm run create
       - name: run tests and generate coverage reports
         run: npm run coverage
-      # # - name: Connect to PostgreSQL
-      #   #   # Runs a script that creates a PostgreSQL table, populates
-      #   #   # run: node client.js
-      # - name: Stop connection
-      #   run: git config --local --get remote.origin.url
-      #   # Environment variables used by the `client.js` script to create
-      # a new PostgreSQL table.
-      # env:
-      #   CI: true
-      #   # The hostname used to communicate with the PostgreSQL service container
-      #   POSTGRES_HOST: localhost
-      #   # The default PostgreSQL port
-      #   POSTGRES_PORT: 5432
-      # DB_USER_NAME: ${{secrets.DB_USER_NAME}}
-      # DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-      # DATABASE_NAME: ${{secrets.DATABASE_NAME}}
-      # DB_HOST: ${{secrets.DB_HOST}}
-      # PORT: ${{secrets.PORT}}
-      # JWT_SECRETE: ${{secrets.DB_USER_NAME}}
-      # JWT_EXPIRES_IN: ${{secrets.JWT_EXPIRES_IN}}
-      # RESET_PASSWORD_SECRETE: ${{secrets.RESET_PASSWORD_SECRETE}}
-      # RESET_LINK_EXPERES_IN: ${{secrets.RESET_LINK_EXPERES_IN}}
-      # EMAIL_SERVICE: ${{secrets.EMAIL_SERVICE}}
-      # EMAIL_USERNAME: ${{secrets.EMAIL_USERNAME}}
-      # EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
-      # DATABASE_TEST_NAME: ${{secrets.DATABASE_TEST_NAME}}
+        # # - name: Connect to PostgreSQL
+        #   #   # Runs a script that creates a PostgreSQL table, populates
+        #   #   # run: node client.js
+        # - name: Stop connection
+        #   run: git config --local --get remote.origin.url
+        #   # Environment variables used by the `client.js` script to create
+        # a new PostgreSQL table.
+        env:
+          CI: true
+          # # The hostname used to communicate with the PostgreSQL service container
+          # POSTGRES_HOST: localhost
+          # # The default PostgreSQL port
+          # POSTGRES_PORT: 5432
+          DB_USER_NAME: ${{secrets.DB_USER_NAME}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          DB_HOST: ${{secrets.DB_HOST}}
+          PORT: ${{secrets.PORT}}
+          JWT_SECRETE: ${{secrets.DB_USER_NAME}}
+          JWT_EXPIRES_IN: ${{secrets.JWT_EXPIRES_IN}}
+          RESET_PASSWORD_SECRETE: ${{secrets.RESET_PASSWORD_SECRETE}}
+          RESET_LINK_EXPERES_IN: ${{secrets.RESET_LINK_EXPERES_IN}}
+          EMAIL_SERVICE: ${{secrets.EMAIL_SERVICE}}
+          EMAIL_USERNAME: ${{secrets.EMAIL_USERNAME}}
+          EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+          DATABASE_TEST_NAME: ${{secrets.DATABASE_TEST_NAME}}
 
       # DB_USER_NAME: postgres
       # DB_PASSWORD: qwe123
