@@ -1,5 +1,6 @@
 const { Bus } = require("./../../../models");
 
+
 const createBus = async (req, res) => {
   try {
     const {
@@ -29,21 +30,22 @@ const createBus = async (req, res) => {
       yearOfManufacturing,
     });
 
-    res.status(201).json({
-      status: "success",
-      message: "Created Sucessfully!!",
-      data: {
-        buses: newBus,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: "Invalid Inputs Please Try Again",
-      err: error.stack,
-    });
-  }
-};
+    res.status(200).json({
+            status:req.t('success status'),
+            message:req.t("successful creation"),
+            data:{
+                buses:newBus
+            }
+        })
+    } catch (error) {
+        res.status(404).json({
+            status:req.t('fail status'),
+            message:req.t('bus wrong ID'),
+            err:error.stack
+        })
+        
+    }
+}
 
 const getAllBuses = async (req, res) => {
   try {
@@ -77,6 +79,8 @@ const getBus = async (req, res) => {
   }
 };
 
+
+
 const updateBus = async (req, res) => {
   const { company, type, plateNumber, manufacturer, capacity, YOM } = req.body;
 
@@ -95,14 +99,14 @@ const updateBus = async (req, res) => {
 
     await bus.save();
     res.status(200).json({
-      status: "successs",
-      message: "Bus updated Successfully",
+      status:req.t('success status'),
+      message:req.t('bus update success')
     });
   } catch (error) {
     res.status(404).json({
-      status: "fail",
-      message: "No Bus found with that ID!",
-      err: error.stack,
+      status:req.t('fail staus'),
+      message:req.t('bus wrong ID'),
+      err:error.stack
     });
   }
 };
@@ -115,13 +119,13 @@ const deleteBus = async (req, res) => {
     });
     await bus.destroy();
     res.status(200).json({
-      message: "Bus Delete Successfully!!",
+      message:req.t('bus delete success'),
     });
   } catch (error) {
     res.status(404).json({
-      status: "fail",
-      message: "No Bus found with that ID!!",
-      err: error.stack,
+      status:req.t('fail status'),
+      message:req.t('bus wrong ID'),
+      err:error.stack
     });
   }
 };

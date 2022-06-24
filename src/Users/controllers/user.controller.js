@@ -48,7 +48,6 @@ const changeRole = async (req, res) => {
   const uuid = req.params.uuid;
   const { roleName } = req.body;
   console.log("role", roleName);
-  try {
     const user = await User.findOne({ where: { uuid } });
 
     user.roleName = roleName;
@@ -211,8 +210,8 @@ const deleteUser = async (req, res) => {
     await user.destroy();
 
     res.status(200).json({
-      status: "success",
-      message: "User Deleted Successfully",
+      status: req.t("success status"),
+      message: req.t("user deleted message"),
     });
   } catch (error) {
     res.status(404).json({
