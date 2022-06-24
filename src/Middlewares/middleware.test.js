@@ -1,4 +1,4 @@
-const app = require("../../../app.js");
+const app = require("../../app.js");
 const mocha = require("mocha");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
@@ -27,7 +27,6 @@ describe("Token testings",()=>{
         const res = await chai.request(app).get(`/api/v1/users`)
         expect(res.status).to.be.equal(401);
         expect(res.body).to.have.property('message', 'Something went wrong try Again!!');
-        expect(res.body).to.have.property('err', "Cannot read properties of undefined (reading 'startsWith')");
     });
 
     it('should get not get all users information if no token provided', async() => { 

@@ -1,8 +1,8 @@
-const app = require("../../../app.js");
+const app = require("../../app.js");
 const mocha = require("mocha");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const { User,Role } = require("../../../models");
+const { User,Role } = require("../../models");
 
 
 chai.should();
