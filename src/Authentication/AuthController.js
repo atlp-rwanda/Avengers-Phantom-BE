@@ -68,16 +68,6 @@ const register = async (req, res) => {
         message: "Role does not exist",
       });
     }
-
-    const role = await Role.findOne({ where: { uuid: roleId } });
-
-    if (!role) {
-      return res.status(403).json({
-        message: "Role does not exist",
-      });
-    }
-    console.log(role);
-
     const newUser = await User.create({
       name,
       profilePicture,
