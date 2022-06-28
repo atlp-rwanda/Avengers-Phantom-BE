@@ -32,7 +32,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-
     steps:
       #   # Downloads a copy of the code in your repository before running CI tests
       - name: Check out repository code
@@ -54,7 +53,7 @@ jobs:
       # Performs a clean installation of all dependencies in the `package.json` file
       # For more information, see https://docs.npmjs.com/cli/ci.html
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: Test secrets
         run: |
           if [ "$DB_PASS" == "qwe123" ]
@@ -82,10 +81,11 @@ jobs:
           EMAIL_USERNAME: ${{secrets.EMAIL_USERNAME}}
           EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
           DATABASE_TEST_NAME: ${{secrets.DATABASE_TEST_NAME}}
+
       # The follwoing codes can be used to make heroku deployment from the workflow
-      # - name: Deploy to heroku
-      #   uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-      #   with:
-      #     heroku_api_key: ${{secrets.API_KEY}}
-      #     heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
-      #     heroku_email: ${{secrets.HEROKU_EMAIL}}
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
