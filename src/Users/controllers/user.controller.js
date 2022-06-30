@@ -77,24 +77,13 @@ const changeRole = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const uuid = req.params.uuid;
-  const {
-    name,
-    idNumber,
-    district,
-    sector,
-    cell,
-    gender,
-    email,
-    permitId,
-    telNumber,
-    carplate,
-    capacity,
-    vehicletype,
+  const {name,  profilePicture,idNumber,district,sector,cell,gender,email,permitId,telNumber,carplate,capacity,vehicletype,
   } = req.body;
   try {
     const user = await User.findOne({ where: { uuid } });
 
     user.name = name;
+    user.profilePicture  = profilePicture;
     user.idNumber = idNumber;
     user.district = district;
     user.sector = sector;
@@ -123,57 +112,46 @@ const updateUser = async (req, res) => {
   }
 };
 
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res,next) => {
   try {
     const { uuid } = req.params;
+    const {name,  profilePicture,idNumber,district,sector,cell,gender,email,permitId,telNumber,carplate,capacity,vehicletype,
+    } = req.body;
     const user = await User.findOne({ where: { uuid } });
     if (!user) {
       return res.status(404).json({message: "User Not Found"});
     }
-    const userId = req.user.dataValues.uuid;
-    if (userId === uuid) {
-      const {
-        name,
-        idNumber,
-        district,
-        sector,
-        cell,
-        gender,
-        email,
-        permitId,
-        telNumber,
-        carplate,
-        capacity,
-        vehicletype,
-      } = req.body;
-      const updatedUser = await User.update(
-        {
-          name,
-          idNumber,
-          district,
-          sector,
-          cell,
-          gender,
-          email,
-          permitId,
-          telNumber,
-          carplate,
-          capacity,
-          vehicletype,
-        },
-        { where: { uuid }, returning: true, plain: true }
-      );
-      const updatedResponse = updatedUser[1].dataValues;
+    if (req.files) {
+      const imageURIs = []; 
+      const files = req.files; 
+      for (const file of files) {
+          const { path } = file;
+          imageURIs.push(path);
+      };
+      console.log(imageURIs)
+      user.profilePicture  = imageURIs;
+      await user.save();
+    
 
-      return res.status(200).json({
-        message: "User Updated",
-        data: updatedResponse,
-      });
-    }
-    return res
-      .status(403)
-      .json({ message: "You can only update your profile" });
+     
+      return res.status(201).json({ user });
+      
+      }
+
+      if (req.file && req.file.path) {
+          const imageURIs = [];
+          imageURIs.push(req.file.path);
+          user.profilePicture = imageURIs; // add the single  
+          await user.save();
+          return res.status(201).json({ user });
+      };
+      if(!req.file && !req.files){
+        return res.status(403).json({ message:"upload a file" });
+      }
+   
+  
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       message: "There was an error while updating",
       error: error.stack,
