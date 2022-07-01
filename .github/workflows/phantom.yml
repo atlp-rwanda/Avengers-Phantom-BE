@@ -1,55 +1,91 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
-
+name: Phantom backend CI
 on:
   push:
-    branches: [ develop ]
+    branches: [develop, ch-githubactions]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
 
 jobs:
+  # Label of the runner job
   build:
-
+    # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    # Service containers to run with `BUILD`
     services:
+      # Label used to access the service container
       postgres:
-        image: postgres:latest
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
         env:
-          POSTGRES_DB: ${{ matrix.database-name }}
-          POSTGRES_USER: ${{ matrix.database-user }}
-          POSTGRES_PASSWORD: ${{ matrix.database-password }}
-        ports:
-          - 5432:5432
+          POSTGRES_PASSWORD: ${{secrets.DB_PASSWORD}}
         # Set health checks to wait until postgres has started
-        options:
+        options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+    strategy:
+      matrix:
+        node-version: [16.x]
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install all dependencies
-      run: npm install
-    - run: npm run build --if-present
-    - name: Check linting errors
-      run: npm run lint
-    - name: run tests and generate coverage reports
-      run: npm run coverage 
-    - name: Sending coveralls report
-      uses: coverallsapp/github-action@master
-      with: 
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-    - uses: ./.github/workflow/phantom.yml
+      #   # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+
+      # Performs a clean installation of all dependencies in the `package.json` file
+      # For more information, see https://docs.npmjs.com/cli/ci.html
+      - name: Install dependencies
+        run: npm ci
+      - name: Test secrets
+        run: |
+          if [ "$DB_PASS" == "qwe123" ]
+          then
+            echo "GOT SECRET VALUES"
+          fi
+        env:
+          DB_PASS: ${{secrets.DB_PASSWORD}}
+
+      - run: npm run build --if-present
+      - name: run tests and generate coverage reports
+        run: npm run coverage
+        env:
+          CI: true
+          DB_USER_NAME: ${{secrets.DB_USER_NAME}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          DB_HOST: ${{secrets.DB_HOST}}
+          PORT: ${{secrets.PORT}}
+          JWT_SECRETE: ${{secrets.DB_USER_NAME}}
+          JWT_EXPIRES_IN: ${{secrets.JWT_EXPIRES_IN}}
+          RESET_PASSWORD_SECRETE: ${{secrets.RESET_PASSWORD_SECRETE}}
+          RESET_LINK_EXPERES_IN: ${{secrets.RESET_LINK_EXPERES_IN}}
+          EMAIL_SERVICE: ${{secrets.EMAIL_SERVICE}}
+          EMAIL_USERNAME: ${{secrets.EMAIL_USERNAME}}
+          EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+          DATABASE_TEST_NAME: ${{secrets.DATABASE_TEST_NAME}}
+
+      # The follwoing codes can be used to make heroku deployment from the workflow
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
