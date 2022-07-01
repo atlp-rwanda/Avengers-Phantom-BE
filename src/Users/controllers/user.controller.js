@@ -1,15 +1,17 @@
 // @ts-nocheck
-const { User,Role } = require("../../../models");
+const { User, Role } = require("../../../models");
+const { errorResponse } = require("../../Helpers/response");
+
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAndCountAll();
-
+    const users = await User.findAndCountAll({
+      attributes: { exclude: ["RoleId"] },
+      include: [{ model: Role, attributes: ['name'] }]
+    });
     res.status(200).json({
       status: req.t('success status'),
-      result: users.length,
-      data: {
-        users: users,
-      },
+      totalUsers: users.count,
+      users: users.rows
     });
   } catch (error) {
     res.status(500).json({
@@ -21,44 +23,40 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const uuid = req.params.uuid;
+  const { id } = req.params;
   try {
     const user = await User.findOne({
-      where: { uuid },
-      include: ["role"],
+      attributes: { exclude: ["RoleId"] },
+      where: { id },
+      include: ["Role"],
     });
     res.status(200).json({
       status: req.t("success message"),
-      data: {
-        user,
-      },
+      user,
     });
   } catch (error) {
-    res.status(404).json({
-      message: "No user with that ID",
+    res.status(500).json({
+      message: "Internal Error",
       Error: error.stack,
     });
   }
 };
 
 const changeRole = async (req, res) => {
-  const uuid = req.params.uuid;
-  const { roleName } = req.body;
-  const role = await Role.findOne({where: {roleName}})
+  const id = req.params.id;
+  const { name } = req.body;
+  const role = await Role.findOne({ where: { name } });
+  console.log('=======', role)
 
-  if(!role){
+  if (!role) {
     res.status(404).json({
       message: req.t("Role does not exists"),
     });
   }
-  else{
+  else {
     try {
-      const user = await User.findOne({ where: { uuid } });
-      user.roleName = role.roleName;
-      user.roleId = role.id;
-
-      await user.save();
-
+      const user = await User.findByPk(id);
+      user.setRole(role);
       res.status(200).json({
         status: req.t("success status"),
         message: req.t("user role updated message"),
@@ -67,8 +65,8 @@ const changeRole = async (req, res) => {
         },
       });
     } catch (error) {
-      res.status(404).json({
-        message: req.t("user wrong ID"),
+      res.status(500).json({
+        message: req.t("User Not Found"),
         Error: error.stack,
       });
     }
@@ -76,103 +74,44 @@ const changeRole = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const uuid = req.params.uuid;
-  const {
-    name,
-    idNumber,
-    district,
-    sector,
-    cell,
-    gender,
-    email,
-    permitId,
-    telNumber,
-    carplate,
-    capacity,
-    vehicletype,
-  } = req.body;
-  try {
-    const user = await User.findOne({ where: { uuid } });
+  const id = req.params.id;
+  const update = req.body;
 
-    user.name = name;
-    user.idNumber = idNumber;
-    user.district = district;
-    user.sector = sector;
-    user.cell = cell;
-    user.email = email;
-    user.gender = gender;
-    user.permitId = permitId;
-    user.telNumber = telNumber;
-    user.carplate = carplate;
-    user.capacity = capacity;
-    user.vehicletype = vehicletype;
+  try {
+    const user = await User.findOne({ where: { id } });
+    Object.entries(update).forEach(e => e[1] ? user[e[0]] = e[1] : '');
     await user.save();
 
     res.status(200).json({
       status: req.t("success status"),
       message: req.t("user update message"),
-      data: {
-        user,
-      },
+      user,
     });
   } catch (error) {
-    res.status(404).json({
-      message: req.t("user wrong ID"),
+    res.status(500).json({
+      message: req.t("User Not Found"),
       Error: error.stack,
     });
   }
 };
 
 const updateProfile = async (req, res) => {
+  const id = req.params.id;
+  const allowed = ["district", "sector", "cell", "telNumber", "profilePicture"];
+  const update = req.body;
+  const restricted = Object.keys(update).filter((v) => update[v] && !allowed.includes(v));
+  if (restricted.length)
+    return errorResponse(res, { status: 400, message: `${restricted.join(", ")} are not editable.` })
   try {
-    const { uuid } = req.params;
-    const user = await User.findOne({ where: { uuid } });
-    if (!user) {
-      return res.status(404).json({message: "User Not Found"});
-    }
-    const userId = req.user.dataValues.uuid;
-    if (userId === uuid) {
-      const {
-        name,
-        idNumber,
-        district,
-        sector,
-        cell,
-        gender,
-        email,
-        permitId,
-        telNumber,
-        carplate,
-        capacity,
-        vehicletype,
-      } = req.body;
-      const updatedUser = await User.update(
-        {
-          name,
-          idNumber,
-          district,
-          sector,
-          cell,
-          gender,
-          email,
-          permitId,
-          telNumber,
-          carplate,
-          capacity,
-          vehicletype,
-        },
-        { where: { uuid }, returning: true, plain: true }
-      );
-      const updatedResponse = updatedUser[1].dataValues;
-
-      return res.status(200).json({
-        message: "User Updated",
-        data: updatedResponse,
-      });
-    }
-    return res
-      .status(403)
-      .json({ message: "You can only update your profile" });
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).json({ message: "User Not Found" });
+    Object.entries(update).forEach(e => e[1] ? user[e[0]] = e[1] : '');
+    const updated = await user.save();
+    return res.status(200).json({
+      status: req.t("success status"),
+      message: req.t("user update message"),
+      user: updated,
+    });
   } catch (error) {
     return res.status(500).json({
       message: "There was an error while updating",
@@ -182,10 +121,10 @@ const updateProfile = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const uuid = req.params.uuid;
+  const id = req.params.id;
   try {
     const user = await User.findOne({
-      where: { uuid },
+      where: { id },
     });
 
     await user.destroy();

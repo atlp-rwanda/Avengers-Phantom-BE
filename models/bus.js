@@ -2,9 +2,9 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Bus extends Model {
-    
+
     static associate({ User }) {
-      this.belongsTo(User, { foreignKey: "userId",as:"user" });
+      this.belongsTo(User);
     }
     toJSON() {
       return {
@@ -12,15 +12,16 @@ module.exports = (sequelize, DataTypes) => {
         id: undefined,
         userId: undefined,
         createdAt: undefined,
-        updatedAt:undefined,
+        updatedAt: undefined,
       };
     }
   }
   Bus.init(
     {
-      uuid: {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
       },
       company: {
         type: DataTypes.STRING,
@@ -71,18 +72,17 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       userId: {
-        type: DataTypes.INTEGER,
-        allowNull:true,
-        defaultValue:null
+        type: DataTypes.UUID,
+        allowNull: true,
+        defaultValue: null
       },
       isAssigned: {
         type: DataTypes.BOOLEAN,
-        defaultValue:false
+        defaultValue: false
       }
     },
     {
       sequelize,
-      tableName: "buses",
       modelName: "Bus",
     }
   );

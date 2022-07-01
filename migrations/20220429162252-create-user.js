@@ -1,17 +1,12 @@
 "use strict";
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable("Users", {
       id: {
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
-      uuid: {
-        type: DataTypes.UUID,
-        allowNull: false,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        type: DataTypes.UUID,
       },
       name: {
         type: DataTypes.STRING,
@@ -41,36 +36,16 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      permitId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+      permitId: DataTypes.STRING,
       telNumber: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      carplate: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      capacity: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      vehicletype: {
-        type: DataTypes.STRING,
-        allowNull: true,
       },
       password: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      roleId: {
-        type: DataTypes.INTEGER,
-      },
-      roleName: {
-        type: DataTypes.STRING,
-      },
+      RoleId: DataTypes.UUID,
       isAssigned: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -90,6 +65,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("Users");
   },
 };

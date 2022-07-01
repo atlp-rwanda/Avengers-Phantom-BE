@@ -3,14 +3,14 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate({ Bus, Role }) {
-      this.hasOne(Bus, { foreignKey: "userId", as: "bus" });
-      this.belongsTo(Role, { foreignKey: "roleId", as: "role" });
+      this.hasOne(Bus, { foreignKey: "userId" });
+      this.belongsTo(Role);
     }
 
     toJSON() {
       return {
         ...this.get(),
-        id: undefined,
+        // id: undefined,
         passwordResetToken: undefined,
         updatedAt: undefined,
         createdAt: undefined,
@@ -22,9 +22,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
-      uuid: {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
       },
       name: {
         type: DataTypes.STRING,
@@ -100,28 +101,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         unique: true
       },
-      carplate: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        unique: true
-      },
-      capacity: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      vehicletype: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
       password: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      roleId: {
-        type: DataTypes.INTEGER,
-      },
-      roleName: {
-        type: DataTypes.STRING,
       },
       isAssigned: {
         type: DataTypes.BOOLEAN,
@@ -134,7 +116,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      tableName: "users",
       modelName: "User",
     }
   );

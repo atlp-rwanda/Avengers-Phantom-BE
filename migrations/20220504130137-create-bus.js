@@ -4,13 +4,9 @@ module.exports = {
     await queryInterface.createTable("buses", {
       id: {
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
-      uuid: {
-        type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        type: DataTypes.UUID,
       },
       company: {
         type: DataTypes.STRING,
@@ -38,12 +34,12 @@ module.exports = {
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull:true,
-        defaultValue:null
+        allowNull: true,
+        defaultValue: null
       },
       isAssigned: {
         type: DataTypes.BOOLEAN,
-        defaultValue:false
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,

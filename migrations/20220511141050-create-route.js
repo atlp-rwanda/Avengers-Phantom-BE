@@ -4,13 +4,9 @@ module.exports = {
     await queryInterface.createTable("routes", {
       id: {
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
-      uuid: {
-        type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        type: DataTypes.UUID,
       },
       name: {
         type: DataTypes.STRING,

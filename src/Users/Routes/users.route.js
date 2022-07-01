@@ -15,7 +15,7 @@ const {
   changeRole,
 } = require("./../controllers/user.controller");
 
-const { protect, restrictTo } = require("./../../Middlewares/Middlewares");
+const { protect, restrictTo, isOwner } = require("./../../Middlewares/Middlewares");
 
 const router = express.Router();
 
@@ -25,13 +25,18 @@ router.put("/forgotpassword", forgotPassword);
 router.put("/resetpassword/:token", resetPassword);
 router.patch("/changepassword", protect, changePassword);
 
-router.route("/").get(protect, restrictTo("administrator"), getAllUsers);
+// router.route("/").get(protect, restrictTo("administrator"), getAllUsers);
+router.route("/").get(getAllUsers);
 router
-  .route("/:uuid")
-  .get(protect, getUser)
-  .patch(protect, restrictTo("administrator"), updateUser)
-  .put(protect, restrictTo("administrator"), changeRole)
+  .route("/:id")
+  // .get(protect, getUser)
+  .get(getUser)
+  // .patch(protect, restrictTo("administrator"), updateUser)
+  .patch(updateUser)
+  // .put(protect, restrictTo("admin"), changeRole)
+  .put(protect, changeRole)
   .delete(protect, restrictTo("administrator"), deleteUser);
-router.patch("/updateProfile/:uuid", protect, updateProfile);
+router.patch("/updateProfile/:id", protect, isOwner, updateProfile);
+// router.patch("/updateProfile/:id", updateProfile);
 
 module.exports = router;

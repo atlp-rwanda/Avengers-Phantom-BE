@@ -1,6 +1,6 @@
 const { User } = require("./../../models");
 const { Op } = require("sequelize");
-
+const { errorResponse } = require("../Helpers/response")
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 
@@ -24,15 +24,11 @@ const protect = async (req, res, next) => {
 
     //  Token verification
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRETE);
-    console.log(decoded);
 
     // Check if User exist
-
-    const uuid = decoded.uuid;
-    console.log(uuid);
-
+    const id = decoded.id;
     const freshUser = await User.findOne({
-      where: { uuid: decoded.uuid },
+      where: { id: decoded.id },
     });
 
     if (!freshUser) {
@@ -54,7 +50,7 @@ const protect = async (req, res, next) => {
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.roleName)) {
+    if (!roles.includes(req.user.getRole().name)) {
       return res.status(403).json({
         message: req.t('middleware restrict message'),
       });
@@ -63,9 +59,9 @@ const restrictTo = (...roles) => {
   };
 };
 
-const paginatedResult = (model) => {
+const paginatedResult = (model, include) => {
   return async (req, res, next) => {
-    const count = await model.findAndCountAll({ include: "bus" });
+    const count = await model.findAndCountAll({ include });
 
     const results = {};
 
@@ -260,6 +256,12 @@ const busToRoutePagination = (model) => {
   };
 };
 
+const isOwner = (req, res, next) => {
+  if (req.user.dataValues.id != req.params.id)
+    return errorResponse(res, { status: 403, message: "You can only update your profile" })
+  next();
+}
+
 module.exports = {
   protect,
   restrictTo,
@@ -267,4 +269,5 @@ module.exports = {
   busPagination,
   routePagination,
   busToRoutePagination,
+  isOwner,
 };

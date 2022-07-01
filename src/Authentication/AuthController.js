@@ -10,14 +10,14 @@ const dotenv = require("dotenv");
 
 dotenv.config({ path: "./.env" });
 
-const signToken = (uuid) => {
-  return jwt.sign({ uuid }, process.env.JWT_SECRETE, {
+const signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRETE, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
-const resetToken = (uuid) => {
-  return jwt.sign({ uuid }, process.env.RESET_PASSWORD_SECRETE, {
+const resetToken = (id) => {
+  return jwt.sign({ id }, process.env.RESET_PASSWORD_SECRETE, {
     expiresIn: process.env.RESET_LINK_EXPERES_IN,
   });
 };
@@ -60,7 +60,7 @@ const register = async (req, res) => {
       });
     }
 
-    const role = await Role.findOne({ where: { uuid: roleId } });
+    const role = await Role.findOne({ where: { id: roleId } });
 
     if (!role) {
       return res.status(403).json({
@@ -132,7 +132,7 @@ const login = async (req, res) => {
       });
     }
 
-    const token = signToken(user.uuid);
+    const token = signToken(user.id);
     res.status(200).json({
       status: req.t("success status"),
       message: `${user.name} ${req.t("login success")}`,
@@ -185,7 +185,7 @@ const forgotPassword = async (req, res) => {
     res.status(200).json({
       status: "sucess",
       message: "Token sent to email",
-      token:Token
+      token: Token
     });
   } catch (error) {
     res.status(500).json({
@@ -257,12 +257,12 @@ const changePassword = async (req, res) => {
 
   const token = req.headers.authorization.split(" ")[1];
 
-  //3.get user from token by uuid
+  //3.get user from token by id
 
   const decoded = jwt.verify(token, process.env.JWT_SECRETE);
-  const uuid = decoded.uuid;
+  const id = decoded.id;
   const user = await User.findOne({
-    where: { uuid: uuid },
+    where: { id: id },
   });
   //4.get password from reques body
   const { oldpassword, newpassword1, newpassword2 } = req.body;

@@ -50,5 +50,7 @@ sequelize
   });
 
 db.sequelize = sequelize;
+sequelize.sync()
+  .then(() => console.log("Role Permission association createed"));
 
 module.exports = db;

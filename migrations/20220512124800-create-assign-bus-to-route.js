@@ -4,13 +4,9 @@ module.exports = {
     await queryInterface.createTable('assignbustoroutes', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        type: DataTypes.INTEGER
-      },
-      uuid:{
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+        type: DataTypes.UUID,
       },
       routeName: {
         type: DataTypes.STRING
@@ -27,14 +23,14 @@ module.exports = {
       plateNumber: {
         type: DataTypes.STRING
       },
-      distance:{
-        type:DataTypes.STRING
+      distance: {
+        type: DataTypes.STRING
       },
       duration: {
-        type:DataTypes.STRING
+        type: DataTypes.STRING
       },
-      busId:{
-        type:DataTypes.INTEGER,
+      busId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       createdAt: {
