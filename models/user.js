@@ -127,6 +127,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      profilePicture: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: "",
+      },
       passwordResetToken: {
         type: DataTypes.STRING,
         defaultValue: "",
