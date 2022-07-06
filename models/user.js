@@ -129,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       profilePicture: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        defaultValue: "",
+        defaultValue: [],
       },
       passwordResetToken: {
         type: DataTypes.STRING,
