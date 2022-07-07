@@ -89,3 +89,22 @@ jobs:
           heroku_api_key: ${{secrets.API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: ${{secrets.HEROKU_EMAIL}}
+<<<<<<< ft-badge
+      - name: Generate coverage report
+        run: |
+         pip install pytest
+         pip install pytest-cov
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v3
+        with:
+          codecov: 
+          token: 79c1b17d-aa01-4a93-ba7e-45b63b62d749
+          directory: ./nyc_output/processinfo/
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          flags: unittests
+          name: codecov-umbrella
+          path_to_write_report: ./nyc_output/report.json
+          verbose: true
+=======
+>>>>>>> develop
