@@ -1,5 +1,8 @@
 // @ts-nocheck
-const { User,Role } = require("../../../models");
+const { User,Role,Notification } = require("../../../models");
+const jwt = require("jsonwebtoken");
+const emitter = require("../../utils/Emitter");
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAndCountAll();
@@ -54,26 +57,139 @@ const changeRole = async (req, res) => {
   else{
     try {
       const user = await User.findOne({ where: { uuid } });
-      user.roleName = role.roleName;
-      user.roleId = role.id;
+      if(user.roleName == roleName){
+        res.status(403).json({
+          message: req.t(`The user is already an ${roleName}`),
+        });
+      } 
+      else{   
+        const notificationBody = {
+          title:"Role change",
+          content:`Hey ${user.name} your role has been changed from ${user.roleName} to ${role.roleName}.Your role now is ${role.roleName}`
+        };
+        user.roleName = role.roleName;
+        user.roleId = role.id;
+        await user.save();
+        const notification = await Notification.create({
+          title:notificationBody.title,
+          content:notificationBody.content,
+          receiver:user.uuid
+        });
 
-      await user.save();
+        emitter.emit("notification request", "");
 
-      res.status(200).json({
-        status: req.t("success status"),
-        message: req.t("user role updated message"),
-        data: {
-          user,
-        },
-      });
+        res.status(200).json({
+          status: req.t("success status"),
+          message: req.t("user role updated message"),
+          data: {
+            user,
+            notification,
+          },
+        });
+      }
     } catch (error) {
       res.status(404).json({
         message: req.t("user wrong ID"),
-        Error: error.stack,
+        Error: error.message,
       });
     }
   }
 };
+
+const allNotifications = async(req,res)=>{
+  const token = req.headers.authorization.split(" ")[1];
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRETE);
+  const uuid = decoded.uuid;
+  try {
+    const user = await User.findOne({where: {uuid:uuid} })
+    if(!user){
+      return res.status(404).json({
+        message:"No user with that ID found"
+      });
+    }
+    const notifications = await Notification.findAndCountAll({where:{receiver:uuid},order: [['createdAt', 'DESC']]});
+    res.status(200).json({
+      status: req.t('success status'),
+      count: notifications.length,
+      data: {
+        notifications: notifications,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: req.t("fail status"),
+      message: req.t("try again message"),
+      err: error.stack,
+    });
+  }
+}
+
+
+const readNotification = async(req,res)=>{
+  const notificationId = req.params.uuid;
+
+  const token = req.headers.authorization.split(" ")[1];
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRETE);
+  const userId = decoded.uuid;
+  
+  try {
+    const notification = await Notification.findOne({where:{receiver:userId,uuid:notificationId}});
+    if (!notification) {
+      return res.status(404).json({
+        message:"Notification not found"
+      });
+    }
+    notification.isRead = true;
+
+    await notification.save();
+
+    res.status(200).json({
+      status: req.t('success status'),
+      data: {
+        notification: notification,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: req.t("fail status"),
+      message: req.t("try again message"),
+      err: error.stack,
+    });
+  }
+}
+
+const deleteNotification = async(req,res)=>{
+  const notificationId = req.params.uuid;
+
+  const token = req.headers.authorization.split(" ")[1];
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRETE);
+  const userId = decoded.uuid;
+  
+  try {
+    const notification = await Notification.findOne({where:{receiver:userId,uuid:notificationId}});
+    if (!notification) {
+      return res.status(404).json({
+        message:"Notification not found"
+      });
+    }
+
+    await notification.destroy();
+
+    res.status(200).json({
+      status: req.t('success status'),
+      message:"Notification deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: req.t("fail status"),
+      message: req.t("try again message"),
+      err: error.stack,
+    });
+  }
+}
 
 const updateUser = async (req, res) => {
   const uuid = req.params.uuid;
@@ -186,5 +302,8 @@ module.exports = {
   updateUser,
   updateProfile,
   changeRole,
+  allNotifications,
   deleteUser,
+  readNotification,
+  deleteNotification
 };

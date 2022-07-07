@@ -1,5 +1,6 @@
-const { User, Bus } = require("../../../../models");
+const { User, Bus,Notification } = require("../../../../models");
 const sendEmail = require("../../../utils/Email");
+const emitter = require("../../../utils/Emitter");
 
 const AssignDriverToBus = async (req, res) => {
   try {
@@ -60,6 +61,14 @@ const AssignDriverToBus = async (req, res) => {
       subject: "Congratulations, You have been Assigned to a new Bus.",
       message,
     });
+
+    const notification = await Notification.create({
+      title:"Bus assignment",
+      content:`Hey ${user.name} you have been assigned new bus.plateNumber ${bus.plateNumber}`,
+      receiver:user.uuid
+    });
+
+    emitter.emit("notification request", "");
 
     res.status(200).json({
       status: "success",
@@ -131,6 +140,14 @@ const unAssignDriverToBus = async (req, res) => {
       subject: "Phantom Has un assigned you from a Bus you have been Driving.",
       message,
     });
+
+    const notification = await Notification.create({
+      title:"Bus unassignment",
+      content:`Hey ${user.name}, Bus ${bus.plateNumber} is removed from you`,
+      receiver:user.uuid
+    });
+
+    emitter.emit("notification request", "");
 
     res.status(200).json({
       status: "success",
