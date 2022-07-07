@@ -1,0 +1,79 @@
+version: v1.0
+name: Phantom backend CI
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+'on':
+  push:
+    branches:
+      - develop
+      - ch-githubactions
+  pull_request:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: '${{secrets.DB_PASSWORD}}'
+        options: '--health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5'
+        ports:
+          - '5432:5432'
+    strategy:
+      matrix:
+        node-version:
+          - 16.x
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: 'Use Node.js ${{ matrix.node-version }}'
+        uses: actions/setup-node@v1
+        with:
+          node-version: '${{ matrix.node-version }}'
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: '${{ runner.OS }}-node-${{ hashFiles(''**/package-lock.json'') }}'
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install dependencies
+        run: npm ci
+      - name: Test secrets
+        run: |
+          if [ "$DB_PASS" == "qwe123" ]
+          then
+            echo "GOT SECRET VALUES"
+          fi
+        env:
+          DB_PASS: '${{secrets.DB_PASSWORD}}'
+      - run: npm run build --if-present
+      - name: run tests and generate coverage reports
+        run: npm run coverage
+        env:
+          CI: true
+          DB_USER_NAME: '${{secrets.DB_USER_NAME}}'
+          DB_PASSWORD: '${{secrets.DB_PASSWORD}}'
+          DATABASE_NAME: '${{secrets.DATABASE_NAME}}'
+          DB_HOST: '${{secrets.DB_HOST}}'
+          PORT: '${{secrets.PORT}}'
+          JWT_SECRETE: '${{secrets.DB_USER_NAME}}'
+          JWT_EXPIRES_IN: '${{secrets.JWT_EXPIRES_IN}}'
+          RESET_PASSWORD_SECRETE: '${{secrets.RESET_PASSWORD_SECRETE}}'
+          RESET_LINK_EXPERES_IN: '${{secrets.RESET_LINK_EXPERES_IN}}'
+          EMAIL_SERVICE: '${{secrets.EMAIL_SERVICE}}'
+          EMAIL_USERNAME: '${{secrets.EMAIL_USERNAME}}'
+          EMAIL_PASSWORD: '${{secrets.EMAIL_PASSWORD}}'
+          DATABASE_TEST_NAME: '${{secrets.DATABASE_TEST_NAME}}'
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: '${{secrets.API_KEY}}'
+          heroku_app_name: '${{secrets.HEROKU_APP_NAME}}'
+          heroku_email: '${{secrets.HEROKU_EMAIL}}'
+blocks: []
