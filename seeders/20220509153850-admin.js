@@ -8,6 +8,7 @@ module.exports = {
       {
         uuid: "9e3d2a6c-5484-4d86-8eb0-40098cd7a540",
         name: "avengers",
+        profilePicture: ["https://res.cloudinary.com/avengersphantom/image/upload/v1657356043/Images/profiles/profilePicture_avatar_ib2nse.png"],
         gender: "male",
         idNumber: 123456789,
         district: "Nyarugenge",
@@ -26,6 +27,7 @@ module.exports = {
         // id:100,
         uuid:"9e3d2a6c-5484-4d86-8eb0-f0098cd7a540",
         name:"Armstrong ngororano",
+        profilePicture: ["https://res.cloudinary.com/avengersphantom/image/upload/v1657356043/Images/profiles/profilePicture_avatar_ib2nse.png"],
         gender:"male",
         idNumber:20040820,
         district:"kicukiro",
