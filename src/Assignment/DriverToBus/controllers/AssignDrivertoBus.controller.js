@@ -125,7 +125,7 @@ const unAssignDriverToBus = async (req, res) => {
     } else {
       bus.userId = null;
       bus.isAssigned = false;
-      user.isAssigned = true;
+      user.isAssigned = false;
       await user.save();
       await bus.save();
     }

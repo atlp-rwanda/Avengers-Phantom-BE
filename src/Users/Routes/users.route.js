@@ -30,7 +30,7 @@ router.put("/resetpassword/:token", resetPassword);
 router.patch("/changepassword", protect, changePassword);
 router.get("/notifications",protect,allNotifications)
 
-router.route("/").get(protect, restrictTo("administrator"), getAllUsers);
+router.route("/").get(protect,restrictTo("operator","administrator"), getAllUsers);
 router
   .route("/:uuid")
   .get(protect, getUser)
