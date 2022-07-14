@@ -34,7 +34,7 @@ router.route("/").get(protect, restrictTo("administrator"), getAllUsers);
 router
   .route("/:uuid")
   .get(protect, getUser)
-  .patch(protect, restrictTo("administrator"), updateUser)
+  .patch(protect, protect, updateUser)
   .delete(protect, restrictTo("administrator"), deleteUser);
 router.patch("/updateProfile/:uuid", protect,  parser.array('user_image'), updateProfile);
 
