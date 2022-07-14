@@ -15,19 +15,21 @@ const getNotifications = async (user) =>{
     return Notification.findAll({where:{receiver: user,isRead:false}});
 }
 
-
 const socketMethod = {};
 
 socketMethod.socketStarter = server =>{
     socketIO.attach(server);
     socketIO.on("connection", async (socket) => {
-        emitter.on("notification request", async () => {
-            const token = socket.handshake.auth.token
-            console.log(token)
-            const verifyToken = tokenVerification(token);
-            const userInfo = await getNotifications(verifyToken.uuid);
-            socket.emit('Notification',userInfo);
+        const token = socket.handshake.auth.token
+        const verifyToken = tokenVerification(token);
+        emitter.on("notification request", async (newNotification) => {
+            if (verifyToken.uuid == newNotification.receiver) {
+                socket.emit('newNotification',newNotification);
+            }
         });
+
+        const notificationCount = await getNotifications(verifyToken.uuid);
+        socket.emit('notificationCount',notificationCount.length);
     });
 };
 
