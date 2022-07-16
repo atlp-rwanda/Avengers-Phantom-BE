@@ -89,7 +89,6 @@ jobs:
           heroku_api_key: ${{secrets.API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-<<<<<<< ft-badge
       - name: Generate coverage report
         run: |
          pip install pytest
@@ -106,5 +105,3 @@ jobs:
           name: codecov-umbrella
           path_to_write_report: ./nyc_output/report.json
           verbose: true
-=======
->>>>>>> develop
