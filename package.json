@@ -15,7 +15,7 @@
     "create": "npx sequelize-cli db:create",
     "drop:db": "npx sequelize-cli db:drop",
     "seed:undo": "npx sequelize-cli db:seed:undo",
-    "test:cmd": " npm run migrate && npm run seed && nyc mocha -R spec src/docs/test src/**/*.test.js --timeout 50000",
+    "test:cmd": "npm run drop:db && npm run create && npm run migrate && npm run seed && nyc mocha -R spec src/docs/test src/**/*.test.js --timeout 50000",
     "test": "cross-env NODE_ENV=test npm run test:cmd",
     "coverage": "nyc npm run test",
     "lint": "eslint"

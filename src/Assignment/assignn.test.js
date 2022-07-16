@@ -20,7 +20,7 @@ const signToken = (uuid) => {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
   };
-const token = signToken('9e3d2a6c-5484-4d86-8eb0-f0098cd7a540');
+const token = signToken('8e3d2a6c-5484-4d86-8eb0-40098cd7a530');
 console.log(token)
 const { User,Bus } = require("../../models");
 before(function(done){
@@ -31,7 +31,7 @@ before(function(done){
       done()
     // });
 })
-describe('Assign', function(){
+describe('Assign driver to bus tests', function(){
     it('should  assigned  drivers to buss', function(done){
         this.timeout(100000);
         chai.request(app)
@@ -169,7 +169,7 @@ describe('Assign', function(){
         it('should return  no user with that id un assign', function(done){
         this.timeout(100000);
         chai.request(app)
-            .put('/api/v1/assignment/unassign/9e3d2a6c-5484-4d86-8eb0-c0098fd7a540/2ae55c54-1a1a-4eed-8f8e-c6c1a62e6d08')
+            .put('/api/v1/assignment/unassign/9e3d2a6c-5484-4d86-8eb0-c0098fd7a54/2ae55c54-1a1a-4eed-8f8e-c6c1a62e6d08')
             .set('Content-Type', 'application/json')
             .set({ Authorization: `Bearer ${token}` })
            
@@ -178,7 +178,7 @@ describe('Assign', function(){
                     console.log(err)
                 } 
                 console.log(res)             
-                chai.expect(res).have.status(404);
+                chai.expect(res).have.status(500);
                 chai.expect(res.body).be.a('object');
                 chai.expect(res.body).to.have.deep.property("status")
             done();

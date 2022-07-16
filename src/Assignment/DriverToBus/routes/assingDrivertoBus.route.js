@@ -24,13 +24,13 @@ router
     paginatedResult(User),
     AllAssignedDrivers
   );
-router.route("/buses").get(protect, restrictTo("operator"), AllAssignedBusses);
+router.route("/buses").get(protect, restrictTo("operator","administrator"), AllAssignedBusses);
 
 router
   .route("/assign/:driverId/:busId")
-  .put(protect, restrictTo("operator"), AssignDriverToBus);
+  .put(protect, restrictTo("operator","administrator"), AssignDriverToBus);
 router
   .route("/unassign/:driverId/:busId")
-  .put(protect, restrictTo("operator"), unAssignDriverToBus);
+  .put(protect, restrictTo("operator","administrator"), unAssignDriverToBus);
 
 module.exports = router;

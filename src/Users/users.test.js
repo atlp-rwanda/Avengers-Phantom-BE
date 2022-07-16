@@ -2,6 +2,7 @@ const app = require("../../app.js");
 const mocha = require("mocha");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const fs =require('fs');
 const { User,Role } = require("../../models");
 
 
@@ -85,7 +86,7 @@ it('it should display the welcome message', async () => {
 
 it(' only Admin should register a user', async() => {
   const token = await siginIn(phantomUserCredentials);
-  const roleId = await createRole({roleName:"administrator"});
+  const roleId = await createRole({roleName:"operator"});
   const res = await chai.request(app).post(`/api/v1/users/register/${roleId}`).set('Authorization', token).send(phantomUser);
   expect(res.status).to.be.equal(201);
   expect(res.body).to.be.property('status', `success`)
@@ -142,15 +143,12 @@ it('User login fail because of missing fields', async() => {
 });
 
 
-let currentUser
-
 it('User should login', async() => {
   const email = phantomUserCredentials.email;
   const user = await User.findOne({ where: { email }});
   const res = await chai.request(app).post('/api/v1/users/login').send(phantomUserCredentials);
   expect(res.status).to.be.equal(200);
   expect(res.body).to.have.property('message', `${user.name} successfully Logged in!!`);
-  currentUser = res.body.data.user.uuid;
 });
 
 it('should get all users information as an admin', async() => { 
@@ -159,6 +157,7 @@ it('should get all users information as an admin', async() => {
   expect(res.status).to.be.equal(200);
   expect(res.body).to.have.property('status', 'success');
 });
+
 
 it('should get a single user information', async() => { 
   const token = await siginIn(phantomUserCredentials);
@@ -221,10 +220,23 @@ it('should not change a user role if role does not exists', async() => {
     roleName:"operator"
   }
   const token = await siginIn(phantomUserCredentials);
-  const res = await chai.request(app).put(`/api/v1/users/${uuid}`).set('Authorization', token).send(updateRole);
+  const res = await chai.request(app).patch(`/api/v1/users/${uuid}/changerole`).set('Authorization', token).send(updateRole);
   expect(res.status).to.be.equal(404);
   expect(res.body).to.have.property('message', 'Role does not exists');
 });
+
+it('should not change a user role if user already has that role', async() => { 
+  const updateRole ={
+    roleName:"operator"
+  }
+  await createRole({roleName:"operator"});
+  const token = await siginIn(phantomUserCredentials);
+  const res = await chai.request(app).patch(`/api/v1/users/8e3d2a6c-5484-4d86-8eb0-40098cd7a530/changerole`).set('Authorization', token).send(updateRole);
+  expect(res.status).to.be.equal(403);
+  expect(res.body).to.have.property('message', `The user is already an ${updateRole.roleName}`);
+});
+
+let notificationId;
 
 it('should change a user role', async() => { 
   const updateRole ={
@@ -232,12 +244,63 @@ it('should change a user role', async() => {
   }
   await createRole({roleName:"administrator"});
   const token = await siginIn(phantomUserCredentials);
-  const res = await chai.request(app).put(`/api/v1/users/${uuid}`).set('Authorization', token).send(updateRole);
+  const res = await chai.request(app).patch(`/api/v1/users/8e3d2a6c-5484-4d86-8eb0-40098cd7a530/changerole`).set('Authorization', token).send(updateRole);
   expect(res.status).to.be.equal(200);
   expect(res.body).to.have.property('message', "User's role Updated Successfully");
+  notificationId = res.body.data.notification.uuid
 });
 
-it('should not update another user profile', async() => { 
+it('should get all users notifications', async() => { 
+  const token = await siginIn(phantomUserCredentials);
+  const res = await chai.request(app).get(`/api/v1/users/notifications`).set('Authorization', token)
+  expect(res.status).to.be.equal(200);
+  expect(res.body).to.have.property('status', 'success');
+});
+
+it('should read notification', async() => { 
+  const token = await siginIn(phantomOperator);
+  const res = await chai.request(app).get(`/api/v1/users/notifications/${notificationId}`).set('Authorization', token)
+  expect(res.status).to.be.equal(200);
+  expect(res.body).to.have.property('status', 'success');
+});
+
+it('should not read notification for invalid ID', async() => { 
+  const token = await siginIn(phantomOperator);
+  const res = await chai.request(app).get(`/api/v1/users/notifications/2f6b34f2-`).set('Authorization', token)
+  expect(res.status).to.be.equal(500);
+  expect(res.body).to.have.property('message', 'Something went wrong try Again!!');
+});
+
+it('should delete notification', async() => { 
+  const token = await siginIn(phantomOperator);
+  const res = await chai.request(app).delete(`/api/v1/users/notifications/${notificationId}`).set('Authorization', token)
+  expect(res.status).to.be.equal(200);
+  expect(res.body).to.have.property('status', 'success');
+});
+
+it('should not delete notification for invalid ID', async() => { 
+  const token = await siginIn(phantomOperator);
+  const res = await chai.request(app).delete(`/api/v1/users/notifications/2f6b34f2-`).set('Authorization', token)
+  expect(res.status).to.be.equal(500);
+  expect(res.body).to.have.property('message', 'Something went wrong try Again!!');
+});
+
+it('should get not read non existing notification ', async() => { 
+  const token = await siginIn(phantomUserCredentials);
+  const res = await chai.request(app).get(`/api/v1/users/notifications/${notificationId}`).set('Authorization', token)
+  expect(res.status).to.be.equal(404);
+  expect(res.body).to.have.property('message', 'Notification not found');
+});
+
+it('should not delete non-existing notification', async() => { 
+  const token = await siginIn(phantomUserCredentials);
+  const res = await chai.request(app).delete(`/api/v1/users/notifications/${notificationId}`).set('Authorization', token)
+  expect(res.status).to.be.equal(404);
+  expect(res.body).to.have.property('message', 'Notification not found');
+});
+
+
+it('should not update user profile if no image file provided', async() => { 
   const updateUser ={
     name:"Phantom phantom",
     gender:"Female",
@@ -255,27 +318,19 @@ it('should not update another user profile', async() => {
   const token = await siginIn(phantomUserCredentials);
   const res = await chai.request(app).patch(`/api/v1/users/updateProfile/${uuid}`).set('Authorization', token).send(updateUser);
   expect(res.status).to.be.equal(403);
-  expect(res.body).to.have.property('message', 'You can only update your profile');
+  expect(res.body).to.have.property('message', 'upload a file');
 });
 
-it('user should update his/her own profile information', async() => { 
-  const updateUser ={
-    name:"Phantom phantom",
-    gender:"Female",
-    idNumber:123456789,
-    district:"Muhanga",
-    sector:"Nyamabuye",
-    cell:"Gahogo",
-    email: "avengersphantom7@gmail.com",
-    permitId:"bmw123",
-    telNumber:784860836,
-    carplate:"RAB347XZ",
-    capacity:100,
-    vehicletype:"Coaster",
-  }
+it('user should update profile', async() => { 
   const token = await siginIn(phantomUserCredentials);
-  const res = await chai.request(app).patch(`/api/v1/users/updateProfile/${currentUser}`).set('Authorization', token).send(updateUser);
-  expect(res.status).to.be.equal(200);
+  const res = await chai.request(app)
+  .patch(`/api/v1/users/updateProfile/${uuid}`)
+  .set('content-type', 'multipart/form-data')
+  .set('Authorization', token)
+  .attach('user_image', fs.readFileSync(`${__dirname}/ball.jpg`), 'tests/ball.jpg')
+
+
+  expect(res.status).to.be.equal(201);
   expect(res.body).to.have.property('message', 'User Updated');
 });
 
@@ -466,7 +521,7 @@ it('should not change a user role if user does not exists', async() => {
   }
   const token = await siginIn(phantomUserCredentials);
   await createRole({roleName:"administrator"});
-  const res = await chai.request(app).put(`/api/v1/users/${uuid}`).set('Authorization', token).send(updateRole);
+  const res = await chai.request(app).patch(`/api/v1/users/${uuid}/changerole`).set('Authorization', token).send(updateRole);
   expect(res.status).to.be.equal(404);
   expect(res.body).to.have.property('message', 'No user with that ID');
 });

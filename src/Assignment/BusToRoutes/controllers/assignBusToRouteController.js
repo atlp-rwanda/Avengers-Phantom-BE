@@ -4,9 +4,7 @@ const { Op } = require("sequelize");
 const createAssignment = async (req, res) => {
   try {
     const { busId, routeId } = req.params;
-    console.log(busId, routeId);
     const bus = await Bus.findOne({ where: { uuid: busId } });
-    console.log(bus);
     if (!bus) {
       return res.status(404).json({
         status: "fail",
@@ -36,7 +34,7 @@ const createAssignment = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      message: "Bus Assined Successfully",
+      message: "Bus Assigned Successfully",
       data: {
         assign: assignment,
       },
