@@ -47,7 +47,7 @@ const register = async (req, res) => {
       length: 8,
       numbers: true,
     });
-
+    
     const hashedPass = await bcrypt.hash(password, 12);
 
     const user = await User.findOne({

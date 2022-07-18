@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         passwordResetToken: undefined,
         updatedAt: undefined,
         createdAt: undefined,
-        isAssigned: undefined,
+        // isAssigned: undefined,
         password: undefined,
         bus: undefined,
       };
