@@ -76,7 +76,7 @@ const changeRole = async (req, res) => {
           receiver:user.uuid
         });
 
-        emitter.emit("notification request", "");
+        emitter.emit("notification request", notification);
 
         res.status(200).json({
           status: req.t("success status"),
