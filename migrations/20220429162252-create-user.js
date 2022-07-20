@@ -81,7 +81,7 @@ module.exports = {
       },
       profilePicture: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        defaultValue : [],
+        defaultValue: [],
       },
       role: {
         type: DataTypes.STRING,

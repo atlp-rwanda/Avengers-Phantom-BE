@@ -1,16 +1,12 @@
 "use strict";
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("routes", {
+    await queryInterface.createTable("Routes", {
       id: {
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
-      uuid: {
-        type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        type: DataTypes.UUID,
       },
       name: {
         type: DataTypes.STRING,
@@ -20,11 +16,11 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      startLocation: {
+      start: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      endLocation: {
+      destination: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -47,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable("routes");
+    await queryInterface.dropTable("Routes");
   },
 };
