@@ -74,7 +74,7 @@ Backend of Avengers Phantom project for team Avengers
 
 ### Deployment URL
 
-[Heruko App Link](https://new-avengers-be-deploy.herokuapp.com/)
+[Heruko App Link](https://avengers-phantom-be-new.herokuapp.com/)
 ### Api Documentation
 
-[Swagger Documentation](https://new-avengers-be-deploy.herokuapp.com/documentation/#/)
+[Swagger Documentation](https://avengers-phantom-be-new.herokuapp.com/documentation/#/)

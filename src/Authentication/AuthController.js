@@ -47,7 +47,7 @@ const register = async (req, res) => {
       length: 8,
       numbers: true,
     });
-    
+
     const hashedPass = await bcrypt.hash(password, 12);
 
     const user = await User.findOne({
@@ -87,7 +87,7 @@ const register = async (req, res) => {
       password: hashedPass,
     });
 
-    const URL = `https://avengers-phantom-test.herokuapp.com/`;
+    const URL = process.env.HEROKU_URL;
     const message = `
     Dear ${newUser.name},
     Congratulations, you are most welcome to Phantom Transport company the best transport services ever. please login to our plaform:${URL}, your username and password are the following: username:${newUser.email}, Password:${password}.
@@ -185,7 +185,7 @@ const forgotPassword = async (req, res) => {
     res.status(200).json({
       status: "sucess",
       message: "Token sent to email",
-      token:Token
+      token: Token,
     });
   } catch (error) {
     res.status(500).json({

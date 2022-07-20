@@ -8,6 +8,7 @@ const AssignBusToRouteDoc = require("./../Assignment/BusToRoutes/BusToRoute.docs
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./.env" });
+const baseUrl = process.env.BACKEND_URL;
 
 const swaggerDoc = {
   openapi: "3.0.0",
@@ -22,7 +23,7 @@ const swaggerDoc = {
       description: "Local dev Server",
     },
     {
-      url: "https://new-avengers-be-deploy.herokuapp.com/",
+      url: `${baseUrl}`,
       description: "Production dev server",
     },
   ],

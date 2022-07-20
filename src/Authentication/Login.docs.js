@@ -1,3 +1,6 @@
+const Email = process.env.EMAIL_USERNAME;
+const Password = process.env.ADMIN_PASSWORD;
+
 const login = {
   tags: ["Login"],
   summary: "Login",
@@ -11,12 +14,12 @@ const login = {
             email: {
               type: "string",
               description: "email of the user",
-              example: "avengersphantom7@gmail.com",
+              example: `${Email}`,
             },
             password: {
               type: "string",
               description: "your password",
-              example: "phantom123",
+              example: `${Password}`,
             },
           },
         },
